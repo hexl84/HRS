@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "Error";
+}
+
+<h2>Error</h2>
+<div>
+    @Html.ViewBag.Msg;
+</div>
+    <div>
+        @Html.ActionLink("Back to Edit", "Edit",new {Id=@Html.ViewBag.Id})
+    </div>

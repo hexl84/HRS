@@ -1,0 +1,133 @@
+﻿@model StaffSystemDemo.Models.Staff
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+<div>
+
+@using (Html.BeginForm("Upload", "Staff", FormMethod.Post, new { ID = "uploadPic", enctype = "multipart/form-data" }))
+{
+        
+        <input type="file" name="head" />
+        <input type="submit" value="Upload" />
+        <input type="hidden" value="@Html.ViewBag.IdData" name="IdData" />
+  
+}
+
+</div>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Staff</legend>
+
+        @Html.HiddenFor(model => model.Id)
+        <div style="float:right" id="Pic">
+            @if (string.IsNullOrEmpty(Model.Picture))
+            {
+                <img src="/Images/nodata.jpg" style="width: 180px; height: 180px" />
+            }
+            else
+            {
+                <img src="/Images/StaffImage/@Html.ValueFor(model=>model.Picture)" style="width: 180px; height: 180px" />
+            }
+            
+        </div>
+        <div class="editor-label">
+            @Html.Label("Name")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("BirthDay")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.BirthDay)
+            @Html.ValidationMessageFor(model => model.BirthDay)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("School")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.School)
+            @Html.ValidationMessageFor(model => model.School)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("Address")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Address)
+            @Html.ValidationMessageFor(model => model.Address)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("WorkExperience")
+        </div>
+        <div class="editor-field">
+            @Html.TextAreaFor(model => model.WorkExperience)
+            @Html.ValidationMessageFor(model => model.WorkExperience)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("SelfAssessment")
+        </div>
+        <div class="editor-field">
+            @Html.TextAreaFor(model => model.SelfAssessment)
+            @Html.ValidationMessageFor(model => model.SelfAssessment)
+        </div>
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            //$("#uploadPic").ajaxForm({
+            //    success: function(data) {
+            //        debugger 
+            //        if (data != undefined && data != null) {
+            //            if (data.msg == 0) {
+            //                alert("请上传图片！");
+            //                return false;
+            //            } else if (data.msg == -1) {
+            //                alert("文件格式不对！");
+            //                return false;
+            //            } else if (data.msg == -2) {
+            //                alert("上传图片不能超过10M！");
+            //                return false;
+            //            } else if (data.msg == -3) {
+            //                alert("出现异常，请稍后再试！！");
+            //                return false;
+            //            } else {
+            //                if (data.Id!=undefined && data.Id!=null) {
+                                
+            //                }
+
+            //            }
+            //        }
+            //    }
+            //});
+        });
+    </script>
+    }
