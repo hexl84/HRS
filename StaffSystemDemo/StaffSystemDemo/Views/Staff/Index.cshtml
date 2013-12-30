@@ -14,8 +14,7 @@
     @using (Html.BeginForm("Search", "Staff"))
     {
     <p>
-        @*Genre: @Html.DropDownList("movieGenre", "All")*@
-          &nbsp;  Title: @Html.TextBox("name")  
+        Name: @Html.TextBox("name")  
         <input type="submit" value="Filter" />
     </p>
     }
@@ -68,8 +67,17 @@
 
 
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-            @Html.ActionLink("Lock", "Lock", new { id = item.Id })
+            @if (item.Lock==1)
+            {
+                @Html.ActionLink("UnLock", "Lock", new { id = item.Id, state = "Unlock" })
+            }
+            else
+            {
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) @("|")
+                 
+                @Html.ActionLink("Lock", "Lock", new { id = item.Id , state = "Lock" })
+            }
+          
         </td>
     </tr>
 }
@@ -79,4 +87,3 @@
 <script type="text/javascript">
    
 </script>
-照片 附件

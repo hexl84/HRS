@@ -6,6 +6,15 @@
 <div>
     @Html.ViewBag.Msg;
 </div>
-    <div>
+<div>
+    @* add or update or delete failed *@
+    @if (@Html.ViewBag.Id==-1)
+    {
+        <a href="javascript:history.go(-1);">go back</a>
+    }
+    else
+    {
         @Html.ActionLink("Back to Edit", "Edit",new {Id=@Html.ViewBag.Id})
-    </div>
+    }
+    
+</div>

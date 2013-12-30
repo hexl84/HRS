@@ -10,12 +10,22 @@
 
 @using (Html.BeginForm("Upload", "Staff", FormMethod.Post, new { ID = "uploadPic", enctype = "multipart/form-data" }))
 {
+    <div>
+        @*<input id="Pic" type="radio" name="UploadFile" value="Picture" />Picture
+        <input id="Att" type="radio" name="UploadFile" value="Attachment" /> Attachment*@
         
+        @Html.RadioButton("UploadFile", "Picture", true, new { @id = "radioP", @name = "Picture",style="width: 10px;"})Picture
+        @Html.RadioButton("UploadFile", "Attachment", false, new { @id = "radioA", @name = "Attachment", style = "width: 10px;" })Attachment
+        
+    </div>
+    
+
         <input type="file" name="head" />
         <input type="submit" value="Upload" />
         <input type="hidden" value="@Html.ViewBag.IdData" name="IdData" />
-  
+
 }
+   
 
 </div>
 
@@ -85,6 +95,15 @@
             @Html.TextAreaFor(model => model.SelfAssessment)
             @Html.ValidationMessageFor(model => model.SelfAssessment)
         </div>
+        <div class="editor-label">
+            @Html.Label("Attachment")
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model=>model.Attachment)
+            @Html.ActionLink("OpenFile", "OpenFile", new { Attachment = Model.Attachment })
+            @*<a href="/Staff/OpenFile?Attachment=@Html.ValueFor(model=>model.Attachment)">@Html.DisplayFor(model => model.Attachment)</a>*@
+            <a href="/Doc/@Html.ValueFor(model=>model.Attachment)">@Html.DisplayFor(model => model.Attachment)</a>
+        </div>
         <p>
             <input type="submit" value="Save" />
         </p>
@@ -99,35 +118,4 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
-    <script type="text/javascript">
-
-        $(document).ready(function() {
-
-            //$("#uploadPic").ajaxForm({
-            //    success: function(data) {
-            //        debugger 
-            //        if (data != undefined && data != null) {
-            //            if (data.msg == 0) {
-            //                alert("请上传图片！");
-            //                return false;
-            //            } else if (data.msg == -1) {
-            //                alert("文件格式不对！");
-            //                return false;
-            //            } else if (data.msg == -2) {
-            //                alert("上传图片不能超过10M！");
-            //                return false;
-            //            } else if (data.msg == -3) {
-            //                alert("出现异常，请稍后再试！！");
-            //                return false;
-            //            } else {
-            //                if (data.Id!=undefined && data.Id!=null) {
-                                
-            //                }
-
-            //            }
-            //        }
-            //    }
-            //});
-        });
-    </script>
     }

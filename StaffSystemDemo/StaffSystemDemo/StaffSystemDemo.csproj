@@ -357,6 +357,7 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Doc\" />
     <Folder Include="Images\StaffImage\" />
   </ItemGroup>
   <PropertyGroup>

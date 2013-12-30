@@ -39,7 +39,15 @@ namespace StaffSystemDemo.Repository
         public void Lock(int Id)
         {
             var staff = FindInfo(Id);
-            staff.Lock = 1;
+            if (staff.Lock == 0)
+            {
+                staff.Lock = 1;
+            }
+            else
+            {
+                staff.Lock = 0;
+            }
+            
             staffSystemDBEntities.Entry(staff).State = EntityState.Modified;
             staffSystemDBEntities.SaveChanges();
         }

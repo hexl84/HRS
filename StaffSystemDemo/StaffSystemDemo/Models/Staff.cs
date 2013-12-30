@@ -7,6 +7,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.ComponentModel.DataAnnotations;
+
 namespace StaffSystemDemo.Models
 {
     using System;
@@ -15,11 +17,24 @@ namespace StaffSystemDemo.Models
     public partial class Staff
     {
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "Name is required")]
+        [StringLength(50)]
         public string Name { get; set; }
+        
+        [DisplayFormat(DataFormatString = "{0:d}")]
         public Nullable<System.DateTime> BirthDay { get; set; }
+
+        [StringLength(100)]
         public string School { get; set; }
+
+        [StringLength(100)]
         public string Address { get; set; }
+
+        [StringLength(2000)]
         public string WorkExperience { get; set; }
+
+        [StringLength(2000)]
         public string SelfAssessment { get; set; }
         public string Attachment { get; set; }
         public Nullable<int> Lock { get; set; }
