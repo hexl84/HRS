@@ -1,4 +1,4 @@
-﻿@model StaffSystemDemo.Models.Staff
+﻿@model StaffSystemData.DataBase.Staff
 
 @{
     ViewBag.Title = "Edit";
@@ -22,7 +22,7 @@
 
         <input type="file" name="head" />
         <input type="submit" value="Upload" />
-        <input type="hidden" value="@Html.ViewBag.IdData" name="IdData" />
+        <input type="hidden" value="@Model.Id" name="IdData" />
 
 }
    
