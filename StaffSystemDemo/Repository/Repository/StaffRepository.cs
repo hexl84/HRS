@@ -14,7 +14,7 @@ namespace Repository.Repository
         void Add(Staff staff);
         Staff FindInfo(int Id);
         void Edit(Staff staff);
-        void Lock(int Id);
+       
     }
 
     public class StaffRepository : IStaffRepository
@@ -29,45 +29,24 @@ namespace Repository.Repository
 
         public IEnumerable<Staff> QueryAllStaffs()
         {
-            //return staffSystemDBEntities.Staffs;
             return _dbAccess.QueryAllStaffs();
         }
 
         public void Add(Staff staff)
         {
-            //staffSystemDBEntities.Staffs.Add(staff);
-            //staffSystemDBEntities.SaveChanges();
-            throw new NotImplementedException();
+            _dbAccess.Add(staff);
         }
 
         public Staff FindInfo(int Id)
         {
-            //return staffSystemDBEntities.Staffs.Find(Id);
-            throw new NotImplementedException();
+            return _dbAccess.FindInfo(Id);
         }
 
         public void Edit(Staff staff)
         {
-            //staffSystemDBEntities.Entry(staff).State = EntityState.Modified;
-            //staffSystemDBEntities.SaveChanges();
-            throw new NotImplementedException();
+            _dbAccess.Edit(staff);
         }
 
-        public void Lock(int Id)
-        {
-            //var staff = FindInfo(Id);
-            //if (staff.Lock == 0)
-            //{
-            //    staff.Lock = 1;
-            //}
-            //else
-            //{
-            //    staff.Lock = 0;
-            //}
-
-            //staffSystemDBEntities.Entry(staff).State = EntityState.Modified;
-            //staffSystemDBEntities.SaveChanges();
-            throw new NotImplementedException();
-        }
+       
     }
 }

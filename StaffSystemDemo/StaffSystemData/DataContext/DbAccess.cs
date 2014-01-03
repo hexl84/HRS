@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,42 +15,39 @@ namespace StaffSystemData.DataContext
         void Add(Staff staff);
         Staff FindInfo(int Id);
         void Edit(Staff staff);
-        void Lock(int Id);
+        
     }
     public class DbAccess :IDbAccess
     {
-        //private readonly IDbAccess _dbAccess;
         private readonly StaffSystemDBEntities _dbEntitiesdbContext;
         public DbAccess(StaffSystemDBEntities dbEntitiesdbContext)
         {
-            //_dbAccess = dbAccess;
             _dbEntitiesdbContext = dbEntitiesdbContext;
         }
 
-
         public IEnumerable<Staff> QueryAllStaffs()
         {
-            return _dbEntitiesdbContext.Staffs;
+            return _dbEntitiesdbContext.Staff;
         }
 
         public void Add(Staff staff)
         {
-            throw new NotImplementedException();
+            _dbEntitiesdbContext.Staff.Add(staff);
+            _dbEntitiesdbContext.SaveChanges();
         }
 
         public Staff FindInfo(int Id)
         {
-            throw new NotImplementedException();
+            return _dbEntitiesdbContext.Staff.Find(Id);
         }
 
         public void Edit(Staff staff)
         {
-            throw new NotImplementedException();
+            _dbEntitiesdbContext.Entry(staff).State=EntityState.Modified;
+            _dbEntitiesdbContext.SaveChanges();
+
         }
 
-        public void Lock(int Id)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
