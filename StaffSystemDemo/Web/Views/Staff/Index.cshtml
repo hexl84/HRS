@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StaffSystemViewModel.VM_Staff>
+﻿@model StaffSystemViewModel.IndexViewModel
 
 @{
     ViewBag.Title = "Index";
@@ -24,32 +24,32 @@
             JobNumber
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            Name
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.BirthDay)
+            BirthDay
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.School)
+            School
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Address)
+            Address
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.WorkExperience)
+            WorkExperience
         </th>
         
         <th></th>
     </tr>
 
-@foreach (var item in Model)
+@foreach (var item in Model.StaffList)
 {
     <tr >
         <td>
-            @Html.DisplayFor(modelItem => item.Id)
+            @item.Id
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Name)
+            @item.Name
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.BirthDay)

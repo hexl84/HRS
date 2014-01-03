@@ -10,7 +10,7 @@ using StaffSystemViewModel;
 
 namespace StaffSystemDemo.Web.Controllers
 {
-    public class StaffController : Controller
+    public class StaffController : BaseController
     {
         private readonly IStaffService _staffService;
 
@@ -21,12 +21,13 @@ namespace StaffSystemDemo.Web.Controllers
 
         public ActionResult Index()
         {
-            var staffList = _staffService.QueryAllStaffs();
-            if (staffList == null)
+
+            var indexModel = new IndexViewModel
             {
-                return View();
-            }
-            return View("Index", staffList);
+                StaffList = _staffService.QueryAllStaffs()
+            };
+            return View("Index", indexModel);
+
         }
 
         [HttpGet]
@@ -36,45 +37,32 @@ namespace StaffSystemDemo.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(VM_Staff staff)
+        public ActionResult Add(IndexViewModel.Staff staff)
         {
-            try
+           
+            if (staff.Id<0)
             {
-                _staffService.Add(staff);
-                return RedirectToAction("Index");
+                throw new Exception("failed");
             }
-            catch (Exception)
-            {
-                ViewBag.Msg = "save failed !";
-                ViewBag.Id = -1;
-                return View("Error");
-            }
+            _staffService.Add(staff);
+            return RedirectToAction("Index");
+            
         }
 
         //select model
-        public ActionResult Edit(int Id=0)
+        public ActionResult Edit(int Id = 0)
         {
-            
-            VM_Staff vmStaff = _staffService.FindInfo(Id);
+
+            IndexViewModel.Staff vmStaff = _staffService.FindInfo(Id);
             return View("Edit", vmStaff);
         }
 
         //update model into db
         [HttpPost]
-        public ActionResult Edit(VM_Staff vmStaff)
+        public ActionResult Edit(IndexViewModel.Staff vmStaff)
         {
-            try
-            {
-                _staffService.Edit(vmStaff);
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Msg = "update failed !";
-                ViewBag.Id = -1;
-                return View("Error");
-            }
-            return View();
+            _staffService.Edit(vmStaff);
+            return RedirectToAction("Index");
         }
 
 
@@ -82,12 +70,12 @@ namespace StaffSystemDemo.Web.Controllers
         {
             try
             {
-               _staffService.Lock(Id,state);
+                _staffService.Lock(Id, state);
                 return RedirectToAction("Index");
             }
             catch (Exception)
             {
-                ViewBag.Msg = state+" failed !";
+                ViewBag.Msg = state + " failed !";
                 ViewBag.Id = -1;
                 return View("Error");
             }
@@ -96,7 +84,7 @@ namespace StaffSystemDemo.Web.Controllers
         public ActionResult Search(string name)
         {
 
-            var staffList = _staffService.QueryAllStaffs().Where(t=>t.Name.Contains(name)).OrderBy(a => a.Id).Select(t => new VM_Staff
+            var staffList = _staffService.QueryAllStaffs().Where(t => t.Name.Contains(name)).OrderBy(a => a.Id).Select(t => new IndexViewModel.Staff
             {
                 Id = t.Id,
                 Name = t.Name,
@@ -125,12 +113,12 @@ namespace StaffSystemDemo.Web.Controllers
                     {
                         ViewBag.Msg = "please select a Attachment!";
                     }
-                    
+
                     ViewBag.Id = int.Parse(IdUpload);
                     return View("Error");
                 }
                 else
-                {                  
+                {
                     var staff = _staffService.FindInfo(int.Parse(IdUpload));
 
                     if (UploadFile == "Picture")
@@ -172,7 +160,7 @@ namespace StaffSystemDemo.Web.Controllers
                             return View("Error");
                         }
 
-                        var filename = IdUpload  + "." + fileExt;
+                        var filename = IdUpload + "." + fileExt;
                         var filepath = Path.Combine(Server.MapPath("~/Doc"), filename);
                         head.SaveAs(filepath);
 
@@ -195,14 +183,14 @@ namespace StaffSystemDemo.Web.Controllers
                 return View("Error");
             }
 
-            
+
         }
 
         public FileStreamResult OpenFile(string Attachment)
         {
             string path = Path.Combine(Server.MapPath("~/Doc"), Attachment);
             string FileType = Path.GetExtension(Attachment).ToLower();
-            if (FileType==".doc")
+            if (FileType == ".doc")
             {
                 return File(new FileStream(path, FileMode.Open), "application/msword", Attachment);
             }
@@ -210,7 +198,14 @@ namespace StaffSystemDemo.Web.Controllers
             {
                 return File(new FileStream(path, FileMode.Open), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", Attachment);
             }
-            
+
+        }
+
+        public ViewResult Error(string msg,string id)
+        {
+            ViewBag.Msg = msg;
+            ViewBag.Id = int.Parse(id);
+            return View();
         }
 
     }
