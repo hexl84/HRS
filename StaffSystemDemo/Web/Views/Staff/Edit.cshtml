@@ -1,0 +1,123 @@
+﻿@model StaffSystemViewModel.VM_Staff
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+<div>
+
+@using (Html.BeginForm("Upload", "Staff", FormMethod.Post, new { ID = "uploadPic", enctype = "multipart/form-data" }))
+{
+    <div>
+      
+        @Html.RadioButton("UploadFile", "Picture", true, new { @id = "radioP", @name = "Picture",style="width: 10px;"})Picture
+        @Html.RadioButton("UploadFile", "Attachment", false, new { @id = "radioA", @name = "Attachment", style = "width: 10px;" })Attachment
+        
+    </div>
+    
+
+        <input type="file" name="head" />
+        <input type="submit" value="Upload" />
+        <input type="hidden" value="@Model.Id" name="IdUpload" />
+
+}
+   
+
+</div>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Staff</legend>
+
+        @Html.HiddenFor(model => model.Id)
+        <div style="float:right" id="Pic">
+            @if (string.IsNullOrEmpty(Model.Picture))
+            {
+                <img src="/Images/nodata.jpg" style="width: 180px; height: 180px" />
+            }
+            else
+            {
+                <img src="/Images/StaffImage/@Html.ValueFor(model=>model.Picture)" style="width: 180px; height: 180px" />
+            }
+            
+        </div>
+        <div class="editor-label">
+            @Html.Label("Name")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("BirthDay")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.BirthDay)
+            @Html.ValidationMessageFor(model => model.BirthDay)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("School")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.School)
+            @Html.ValidationMessageFor(model => model.School)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("Address")
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Address)
+            @Html.ValidationMessageFor(model => model.Address)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("WorkExperience")
+        </div>
+        <div class="editor-field">
+            @Html.TextAreaFor(model => model.WorkExperience)
+            @Html.ValidationMessageFor(model => model.WorkExperience)
+        </div>
+
+        <div class="editor-label">
+            @Html.Label("SelfAssessment")
+        </div>
+        <div class="editor-field">
+            @Html.TextAreaFor(model => model.SelfAssessment)
+            @Html.ValidationMessageFor(model => model.SelfAssessment)
+        </div>
+        <div class="editor-label">
+            @Html.Label("Attachment")
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model=>model.Attachment)
+            @if (!string.IsNullOrEmpty(Model.Attachment))
+            {
+                @Html.ActionLink("OpenFile", "OpenFile", new { Attachment = Model.Attachment })
+                @*<a href="/Staff/OpenFile?Attachment=@Html.ValueFor(model=>model.Attachment)">@Html.DisplayFor(model => model.Attachment)</a>*@
+                <a href="/Doc/@Html.ValueFor(model=>model.Attachment)">@Html.DisplayFor(model => model.Attachment)</a>
+            }
+           
+        </div>
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    }
