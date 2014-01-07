@@ -50,7 +50,7 @@ namespace StaffSystemService.Service
             staff.Address = vm_staff.Address;
             staff.WorkExperience = vm_staff.WorkExperience;
             staff.SelfAssessment = vm_staff.SelfAssessment;
-            staff.Lock = 0;
+            staff.Lock = false;
             staff.Picture = vm_staff.Picture;
             staff.Attachment = vm_staff.Attachment;
             _staffRepository.Add(staff);
@@ -97,11 +97,11 @@ namespace StaffSystemService.Service
             var staff = _staffRepository.FindInfo(Id);
             if (state == "Lock")
             {
-                staff.Lock = 1;
+                staff.Lock = true;
             }
             else
             {
-                staff.Lock = 0;
+                staff.Lock = false;
             }
             _staffRepository.Edit(staff);
         }

@@ -12,75 +12,73 @@
 
     @using (Html.BeginForm("Search", "Staff"))
     {
-    <p>
-        Name: @Html.TextBox("name")  
-        <input type="submit" value="Filter" />
-    </p>
+        <p>
+            Name: @Html.TextBox("name")  
+            <input type="submit" value="Filter" />
+        </p>
     }
 </p>
-<table id="table1">
-    <tr id="tr_0">
-        <th>
-            JobNumber
-        </th>
-        <th>
-            Name
-        </th>
-        <th>
-            BirthDay
-        </th>
-        <th>
-            School
-        </th>
-        <th>
-            Address
-        </th>
-        <th>
-            WorkExperience
-        </th>
-        
-        <th></th>
-    </tr>
+<div class="container">
+    <table class="table table-striped table-bordered table-condensed">
+        <tr id="tr_0">
+            <th>
+                JobNumber
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                BirthDay
+            </th>
+            <th>
+                School
+            </th>
+            <th>
+                Address
+            </th>
+            <th>
+                WorkExperience
+            </th>
 
-@foreach (var item in Model.StaffList)
-{
-    <tr >
-        <td>
-            @item.Id
-        </td>
-        <td>
-            @item.Name
-        </td>
-        <td>
-            @item.BirthDay
-           
-        </td>
-        <td>
-            @item.School
-        </td>
-        <td>
-            @item.Address
-        </td>
-        <td>
-            @item.WorkExperience
-        </td>
+            <th>operate</th>
+        </tr>
 
+        @foreach (var item in Model.StaffList)
+        {
+            <tr>
+                <td>
+                    @item.Id
+                </td>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.BirthDay
+                </td>
+                <td>
+                    @item.School
+                </td>
+                <td>
+                    @item.Address
+                </td>
+                <td>
+                    @item.WorkExperience
+                </td>
+                <td>
+                    @if (item.Lock == true)
+                    {
+                        @Html.ActionLink("UnLock", "Lock", new { id = item.Id, state = "Unlock" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) @("|")
 
-        <td>
-            @if (item.Lock==1)
-            {
-                @Html.ActionLink("UnLock", "Lock", new { id = item.Id, state = "Unlock" })
-            }
-            else
-            {
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) @("|")
-                 
-                @Html.ActionLink("Lock", "Lock", new { id = item.Id , state = "Lock" })
-            }
-          
-        </td>
-    </tr>
-}
+                        @Html.ActionLink("Lock", "Lock", new { id = item.Id, state = "Lock" })
+                    }
 
-</table>
+                </td>
+            </tr>
+        }
 
+    </table>
+</div>

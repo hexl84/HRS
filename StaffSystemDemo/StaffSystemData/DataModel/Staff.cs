@@ -12,7 +12,7 @@ namespace StaffSystemData.DataModel
         public string Address { get; set; }
         public string WorkExperience { get; set; }
         public string SelfAssessment { get; set; }
-        public int? Lock { get; set; }
+        public bool Lock { get; set; }
         public string Picture { get; set; }
         public string Attachment { get; set; }
     }
