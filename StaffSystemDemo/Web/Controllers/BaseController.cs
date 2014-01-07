@@ -15,7 +15,7 @@ namespace StaffSystemDemo.Web.Controllers
             string action = filterContext.RouteData.Values["action"] as string;
 
             //filterContext.RequestContext.HttpContext.Response.Write();
-            string msg = string.Format("{0}发生错误!{1}",  action, filterContext.Exception.Message);
+            string msg = string.Format("{0}An Error Occurred!{1}",  action, filterContext.Exception.Message);
 
             var dic=new RouteValueDictionary();
             dic.Add("controller", "Staff");

@@ -2,11 +2,53 @@
 
 @{
     ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#StaffForm").validate();
+
+    });
+
+    function onAdd() {
+
+        if ($("#StaffForm").valid()) {
+
+            var staff = {
+                Name: $("#Name").val(),
+                BirthDay: $("#BirthDay").val(),
+                School: $("#School").val(),
+                Address: $("#Address").val(),
+                WorkExperience: $("#WorkExperience").val(),
+                SelfAssessment: $("#SelfAssessment").val(),
+            };
+
+            $("#AddUser").attr("disabled", "disabled");
+           
+            $.ajax({
+                url: "@Url.Action("AddStaff", "Staff")",
+                type: "post",
+                data: staff,
+                success: function (result) {
+                    window.location.href = "@Url.Action("Index", "Staff")";
+                },
+                error: function () {
+                }
+            });
+        }
+    }
+</script>
+<style type="text/css">
+    #StaffForm label.error {
+        padding-left: 16px;
+        margin-left: 2px;
+        color: red;
+    }
+</style>
 <h2>Add</h2>
 <section id="add1">
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("Add", "Staff", FormMethod.Post, new { name = "StaffForm", id = "StaffForm" }))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true)
@@ -15,58 +57,58 @@
             <legend>Staff</legend>
 
             <div class="editor-label">
-               Name
+                Name
             </div>
             <div class="editor-field">
-                @Html.EditorFor(model=>model.Name)
+                @*EditorFor and TextBoxFor ,add custom class  , Because the default template for EditorFor does not support custom attribution.  *@
+                @Html.TextBoxFor(model => model.Name, new { @class = "required", @maxlength = 50 })
             </div>
 
             <div class="editor-label">
-                @Html.LabelFor(model => model.BirthDay)
+                BirthDay
             </div>
             <div class="editor-field">
-                @Html.EditorFor(model => model.BirthDay)
+                @Html.TextBoxFor(model => model.BirthDay, new { @class = "required date" })
             </div>
 
             <div class="editor-label">
-                @Html.LabelFor(model => model.School)
+                School
             </div>
             <div class="editor-field">
-                @Html.EditorFor(model => model.School)
+                @Html.TextBoxFor(model => model.School, new { @class = "required", @maxlength = 100 })
             </div>
 
             <div class="editor-label">
-                @Html.LabelFor(model => model.Address)
+                Address
             </div>
             <div class="editor-field">
-                @Html.EditorFor(model => model.Address)
+                @Html.TextBoxFor(model => model.Address, new { @class = "required", @maxlength = 100 })
             </div>
 
             <div class="editor-label">
-                @Html.LabelFor(model => model.WorkExperience)
+                WorkExperience
             </div>
             <div class="editor-field">
-                @Html.TextAreaFor(model => model.WorkExperience)
+                @Html.TextAreaFor(model => model.WorkExperience, new { @class = "required", @maxlength = 500 })
             </div>
             <div class="editor-label">
-                @Html.LabelFor(model => model.SelfAssessment)
+                SelfAssessment
             </div>
             <div class="editor-field">
-                @Html.TextAreaFor(model => model.SelfAssessment)
+                @Html.TextAreaFor(model => model.SelfAssessment, new { @class = "required", @maxlength = 500 })
             </div>
-
 
             <p>
-                <input type="submit" value="Create" />
+                @*<input type="submit" value="Create" />*@
             </p>
         </fieldset>
     }
 </section>
 
-    <div>
-        @Html.ActionLink("Back to List", "Index")
-    </div>
+<div>
+    <input id="AddUser" type="button" value="add User" onclick="onAdd();"  />
+    
+    @Html.ActionLink("Back to List", "Index")
+</div>
 
-    @section Scripts {
-        @Scripts.Render("~/bundles/jqueryval")
-    }
+

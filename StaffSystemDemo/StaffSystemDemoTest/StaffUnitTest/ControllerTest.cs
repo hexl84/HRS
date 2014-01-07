@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Windows.Forms;
 using FluentAssertions;
 using StaffSystemService.Service;
 using StaffSystemViewModel;
@@ -23,8 +25,8 @@ namespace StaffSystemDemoTest.StaffUnitTest
             {
                 new IndexViewModel.Staff
                 {
-                    Name = "moto",
-                    Address = "aaa"
+                    Name = "yg",
+                    Address = "Address"
                 }
             });
             var controller = new StaffController(staffServiceObject);
@@ -91,6 +93,129 @@ namespace StaffSystemDemoTest.StaffUnitTest
             //Assert
 
         }
-        
+
+
+        [Test]
+        public void Test_Edit_By_Id()
+        {
+            //Arrange
+            var staffServiceMock = new Mock<IStaffService>();
+            var staffServiceObject = staffServiceMock.Object;
+            staffServiceMock.Setup(x => x.FindInfo(1)).Returns(new IndexViewModel.Staff()
+            {
+                Name = "yg",
+                Address = "Address"
+            });
+
+            //Act
+            var controller = new StaffController(staffServiceObject);
+            var result=controller.Edit(1);
+
+            //Assert
+            var viewResult = (ViewResult) result;
+            viewResult.Model.Should().BeOfType<IndexViewModel.Staff>();
+
+        }
+
+        [Test]
+        public void Test_Edit_By_Staff()
+        {
+            //Arrange
+            IndexViewModel.Staff vmStaff = new IndexViewModel.Staff();
+            vmStaff.Id = -1;
+            vmStaff.Name = "yg";
+            vmStaff.BirthDay = DateTime.Parse("2014-01-02");
+            vmStaff.School = "School";
+            vmStaff.Address = "Address";
+            vmStaff.WorkExperience = "WorkExperience";
+
+            var staffServiceMock = new Mock<IStaffService>();
+            var staffServiceObject = staffServiceMock.Object;
+            var controller = new StaffController(staffServiceObject);
+
+            int count = 0;
+            staffServiceMock.Setup(x => x.Edit(vmStaff)).Callback(()=>count++);
+            
+            //Act
+           controller.Edit(vmStaff);
+
+            //Assert
+            count.Should().Be(1);
+
+        }
+
+        [Test]
+        public void Test_Lock()
+        {
+            //Arrange
+            var state = "Lock";
+            var id = 1;
+
+            var staffServiceMock = new Mock<IStaffService>();
+            var staffServiceObject = staffServiceMock.Object;
+            var controller = new StaffController(staffServiceObject);
+
+            int count = 0;
+            staffServiceMock.Setup(x => x.Lock(id,state)).Callback(() => count++);
+
+            //Act
+            controller.Lock(state, id);
+
+            //Assert
+            count.Should().Be(1);
+
+        }
+
+        [Test]
+        public void Test_UnLock()
+        {
+            //Arrange
+            var state = "UnLock";
+            var id = 1;
+
+            var staffServiceMock = new Mock<IStaffService>();
+            var staffServiceObject = staffServiceMock.Object;
+            var controller = new StaffController(staffServiceObject);
+
+            int count = 0;
+            staffServiceMock.Setup(x => x.Lock(id, state)).Callback(() => count++);
+
+            //Act
+            controller.Lock(state, id);
+
+            //Assert
+            count.Should().Be(1);
+
+        }
+
+        [Test]
+        public void Test_Search()
+        {
+            //Arrange
+            var name = "1";
+            
+            var staffServiceMock = new Mock<IStaffService>();
+            var staffServiceObject = staffServiceMock.Object;
+            var controller = new StaffController(staffServiceObject);
+
+            staffServiceMock.Setup(x => x.Search(name)).Returns(new List<IndexViewModel.Staff>
+            {
+                new IndexViewModel.Staff()
+                {
+                    Id = 1,
+                    Name = "yg"
+                }
+            });
+
+            //Act
+            var serchResult=controller.Search(name);
+
+            //Assert
+            var viewResult = (ViewResult)serchResult;
+            viewResult.Model.Should().BeOfType<IndexViewModel>();
+            (viewResult.Model as IndexViewModel).StaffList.Count.Should().Be(1);
+        }
+
+       
     }
 }

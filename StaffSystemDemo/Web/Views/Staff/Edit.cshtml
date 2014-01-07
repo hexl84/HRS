@@ -38,70 +38,62 @@
         <div style="float:right" id="Pic">
             @if (string.IsNullOrEmpty(Model.Picture))
             {
-                <img src="/Images/nodata.jpg" style="width: 180px; height: 180px" />
+                <img src="~/Images/nodata.jpg" style="width: 180px; height: 180px" />
             }
             else
             {
-                <img src="/Images/StaffImage/@Html.ValueFor(model=>model.Picture)" style="width: 180px; height: 180px" />
+                <img src="~/Images/StaffImage/@Html.ValueFor(model=>model.Picture)" style="width: 180px; height: 180px" />
             }
             
         </div>
         <div class="editor-label">
-            @Html.Label("Name")
+            Name
         </div>
         <div class="editor-field">
             @Html.EditorFor(model => model.Name)
-            @Html.ValidationMessageFor(model => model.Name)
         </div>
 
         <div class="editor-label">
-            @Html.Label("BirthDay")
+            BirthDay
         </div>
         <div class="editor-field">
             @Html.EditorFor(model => model.BirthDay)
-            @Html.ValidationMessageFor(model => model.BirthDay)
         </div>
 
         <div class="editor-label">
-            @Html.Label("School")
+            School
         </div>
         <div class="editor-field">
             @Html.EditorFor(model => model.School)
-            @Html.ValidationMessageFor(model => model.School)
         </div>
 
         <div class="editor-label">
-            @Html.Label("Address")
+            Address
         </div>
         <div class="editor-field">
             @Html.EditorFor(model => model.Address)
-            @Html.ValidationMessageFor(model => model.Address)
         </div>
 
         <div class="editor-label">
-            @Html.Label("WorkExperience")
+            WorkExperience
         </div>
         <div class="editor-field">
             @Html.TextAreaFor(model => model.WorkExperience)
-            @Html.ValidationMessageFor(model => model.WorkExperience)
         </div>
 
         <div class="editor-label">
-            @Html.Label("SelfAssessment")
+            SelfAssessment
         </div>
         <div class="editor-field">
             @Html.TextAreaFor(model => model.SelfAssessment)
-            @Html.ValidationMessageFor(model => model.SelfAssessment)
         </div>
         <div class="editor-label">
-            @Html.Label("Attachment")
+           Attachment
         </div>
         <div class="editor-field">
-            @Html.DisplayFor(model=>model.Attachment)
             @if (!string.IsNullOrEmpty(Model.Attachment))
             {
                 @Html.ActionLink("OpenFile", "OpenFile", new { Attachment = Model.Attachment })
-                @*<a href="/Staff/OpenFile?Attachment=@Html.ValueFor(model=>model.Attachment)">@Html.DisplayFor(model => model.Attachment)</a>*@
                 <a href="/Doc/@Html.ValueFor(model=>model.Attachment)">@Html.DisplayFor(model => model.Attachment)</a>
             }
            

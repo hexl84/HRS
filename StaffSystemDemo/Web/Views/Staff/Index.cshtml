@@ -2,14 +2,14 @@
 
 @{
     ViewBag.Title = "Index";
+    Layout ="~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Index</h2>
 
 <p>
     @Html.ActionLink("Create New", "Add")
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-   
+
     @using (Html.BeginForm("Search", "Staff"))
     {
     <p>
@@ -52,16 +52,17 @@
             @item.Name
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.BirthDay)
+            @item.BirthDay
+           
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.School)
+            @item.School
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Address)
+            @item.Address
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.WorkExperience)
+            @item.WorkExperience
         </td>
 
 

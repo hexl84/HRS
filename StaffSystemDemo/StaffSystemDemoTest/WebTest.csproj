@@ -78,7 +78,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StaffUnitTest\StaffControllerTest.cs" />
     <Compile Include="StaffUnitTest\ControllerTest.cs" />
   </ItemGroup>
   <ItemGroup>

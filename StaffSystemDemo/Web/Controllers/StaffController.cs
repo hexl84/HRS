@@ -49,6 +49,14 @@ namespace StaffSystemDemo.Web.Controllers
             
         }
 
+        [HttpPost]
+        public ActionResult AddStaff(IndexViewModel.Staff staff)
+        {
+            _staffService.Add(staff);
+            return new EmptyResult();
+
+        }
+
         //select model
         public ActionResult Edit(int Id = 0)
         {
@@ -68,33 +76,18 @@ namespace StaffSystemDemo.Web.Controllers
 
         public ActionResult Lock(string state, int Id = 0)
         {
-            try
-            {
                 _staffService.Lock(Id, state);
                 return RedirectToAction("Index");
-            }
-            catch (Exception)
-            {
-                ViewBag.Msg = state + " failed !";
-                ViewBag.Id = -1;
-                return View("Error");
-            }
         }
 
         public ActionResult Search(string name)
         {
-
-            var staffList = _staffService.QueryAllStaffs().Where(t => t.Name.Contains(name)).OrderBy(a => a.Id).Select(t => new IndexViewModel.Staff
+            var indexModel = new IndexViewModel
             {
-                Id = t.Id,
-                Name = t.Name,
-                BirthDay = t.BirthDay,
-                School = t.School,
-                Address = t.Address,
-                WorkExperience = t.WorkExperience,
-                Lock = t.Lock
-            });
-            return View("Index", staffList);
+                StaffList = _staffService.Search(name)
+            };
+
+            return View("Index", indexModel);
         }
 
         //image upload

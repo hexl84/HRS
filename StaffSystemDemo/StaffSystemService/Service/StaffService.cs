@@ -14,6 +14,7 @@ namespace StaffSystemService.Service
         IndexViewModel.Staff FindInfo(int Id);
         void Edit(IndexViewModel.Staff staff);
         void Lock(int Id, string state);
+        List<IndexViewModel.Staff> Search(string name);
     }
     public class StaffService : IStaffService
     {
@@ -103,6 +104,12 @@ namespace StaffSystemService.Service
                 staff.Lock = 0;
             }
             _staffRepository.Edit(staff);
+        }
+
+        public List<IndexViewModel.Staff> Search(string name)
+        {
+            var staffList = QueryAllStaffs().Where(t => t.Name.Contains(name)).ToList();
+            return staffList;
         }
 
 
