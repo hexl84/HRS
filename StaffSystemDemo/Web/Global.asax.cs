@@ -6,6 +6,11 @@ using Castle.Windsor;
 using Castle.Windsor.Installer;
 using StaffSystemDemo.Web.App_Start;
 using Web;
+using Castle.MicroKernel.Registration;
+using StaffSystemData.DataContext;
+using Repository.Repository;
+using StaffSystemService.Service;
+using StaffSystemData.DataBase;
 
 namespace StaffSystemDemo.Web
 {
@@ -26,6 +31,12 @@ namespace StaffSystemDemo.Web
 
             var container = new WindsorContainer();
             container.Install(FromAssembly.This());
+
+            container.Register(Classes.FromThisAssembly().BasedOn<IController>().LifestyleTransient());
+            container.Register(Component.For<IDbAccess>().ImplementedBy<DbAccess>().LifestylePerWebRequest());
+            container.Register(Component.For<IStaffRepository>().ImplementedBy<StaffRepository>().LifestylePerWebRequest());
+            container.Register(Component.For<IStaffService>().ImplementedBy<StaffService>().LifestylePerWebRequest());
+            container.Register(Component.For<StaffSystemDBEntities>().LifestyleSingleton());
 
             var controllerFactory = new WindsorControllerFactory(container);
             ControllerBuilder.Current.SetControllerFactory(controllerFactory);

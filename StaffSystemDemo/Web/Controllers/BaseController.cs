@@ -11,19 +11,8 @@ namespace StaffSystemDemo.Web.Controllers
     {
         protected override void OnException(ExceptionContext filterContext)
         {
-            string controller = filterContext.RouteData.Values["controller"] as string;
-            string action = filterContext.RouteData.Values["action"] as string;
-
-            //filterContext.RequestContext.HttpContext.Response.Write();
-            string msg = string.Format("{0}An Error Occurred!{1}",  action, filterContext.Exception.Message);
-
-            var dic=new RouteValueDictionary();
-            dic.Add("controller", "Staff");
-            dic.Add("action", "Error");
-            dic.Add("msg", msg);
-            dic.Add("id", "-1");
-            filterContext.RequestContext.HttpContext.Response.RedirectToRoute(dic);
             filterContext.ExceptionHandled = true;
+            filterContext.Result=new RedirectResult(Url.Action("Error","Staff"));
             base.OnException(filterContext);
         }
     }

@@ -21,7 +21,6 @@ namespace StaffSystemDemo.Web.Controllers
 
         public ActionResult Index()
         {
-
             var indexModel = new IndexViewModel
             {
                 StaffList = _staffService.QueryAllStaffs()
@@ -54,7 +53,6 @@ namespace StaffSystemDemo.Web.Controllers
         {
             _staffService.Add(staff);
             return new EmptyResult();
-
         }
 
         //select model
@@ -94,110 +92,81 @@ namespace StaffSystemDemo.Web.Controllers
         [HttpPost]
         public ActionResult Upload(HttpPostedFileBase head, string IdUpload, string UploadFile)
         {
-            try
+            
+            if ((head == null))
             {
-                if ((head == null))
-                {
-                    if (UploadFile == "Picture")
-                    {
-                        ViewBag.Msg = "please select a picture!";
-                    }
-                    else
-                    {
-                        ViewBag.Msg = "please select a Attachment!";
-                    }
-
-                    ViewBag.Id = int.Parse(IdUpload);
-                    return View("Error");
-                }
-                else
-                {
-                    var staff = _staffService.FindInfo(int.Parse(IdUpload));
-
-                    if (UploadFile == "Picture")
-                    {
-                        var supportedTypes = new[] { "jpg", "jpeg" };
-                        var fileExt = System.IO.Path.GetExtension(head.FileName).Substring(1);
-                        if (!supportedTypes.Contains(fileExt))
-                        {
-
-                            ViewBag.Msg = "the file type is wrong!";
-                            ViewBag.Id = int.Parse(IdUpload);
-                            return View("Error");
-                        }
-
-                        if (head.ContentLength > 1024 * 1000 * 3)
-                        {
-                            ViewBag.Msg = "the file size is so big, please select other picture!";
-                            ViewBag.Id = int.Parse(IdUpload);
-                            return View("Error");
-                        }
-
-                        var filename = IdUpload + "." + fileExt;
-                        var filepath = Path.Combine(Server.MapPath("~/Images/StaffImage"), filename);
-                        head.SaveAs(filepath);
-
-                        staff.Picture = filename;
-                        _staffService.Edit(staff);
-                        return Edit(int.Parse(IdUpload));
-                    }
-                    else if (UploadFile == "Attachment")
-                    {
-                        var supportedTypes = new[] { "doc", "docx" };
-                        var fileExt = System.IO.Path.GetExtension(head.FileName).Substring(1);
-                        if (!supportedTypes.Contains(fileExt))
-                        {
-
-                            ViewBag.Msg = "the file type is wrong!";
-                            ViewBag.Id = int.Parse(IdUpload);
-                            return View("Error");
-                        }
-
-                        var filename = IdUpload + "." + fileExt;
-                        var filepath = Path.Combine(Server.MapPath("~/Doc"), filename);
-                        head.SaveAs(filepath);
-
-                        staff.Attachment = filename;
-                        _staffService.Edit(staff);
-                        return Edit(int.Parse(IdUpload));
-                    }
-                    else
-                    {
-                        ViewBag.Msg = "the file type is wrong!";
-                        ViewBag.Id = int.Parse(IdUpload);
-                        return View("Error");
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                ViewBag.Msg = "save failed !";
-                ViewBag.Id = int.Parse(IdUpload);
                 return View("Error");
             }
 
+            var staff = _staffService.FindInfo(int.Parse(IdUpload));
 
+            if (UploadFile == "Picture")
+            {
+                var supportedTypes = new[] { "jpg", "jpeg" };
+                var extension = Path.GetExtension(head.FileName);
+                if (extension != null)
+                {
+                    var fileExt = extension.Substring(1);
+                    if (!supportedTypes.Contains(fileExt))
+                    {
+                        return View("Error");
+                    }
+
+                    if (head.ContentLength > 1024 * 1000 * 3)
+                    {
+                        return View("Error");
+                    }
+
+                    var filename = IdUpload + "." + fileExt;
+                    var filepath = Path.Combine(Server.MapPath("~/Images/StaffImage"), filename);
+                    head.SaveAs(filepath);
+
+                    staff.Picture = filename;
+                }
+                _staffService.Edit(staff);
+                return Edit(int.Parse(IdUpload));
+            }
+            if (UploadFile == "Attachment")
+            {
+                var supportedTypes = new[] { "doc", "docx" };
+                var extension = Path.GetExtension(head.FileName);
+                if (extension != null)
+                {
+                    var fileExt = extension.Substring(1);
+                    if (!supportedTypes.Contains(fileExt))
+                    {
+                        return View("Error");
+                    }
+
+                    var filename = IdUpload + "." + fileExt;
+                    var filepath = Path.Combine(Server.MapPath("~/Doc"), filename);
+                    head.SaveAs(filepath);
+
+                    staff.Attachment = filename;
+                }
+                _staffService.Edit(staff);
+                return Edit(int.Parse(IdUpload));
+            }
+            return View("Error");
         }
 
-        public FileStreamResult OpenFile(string Attachment)
+        public FileStreamResult OpenFile(string attachment)
         {
-            string path = Path.Combine(Server.MapPath("~/Doc"), Attachment);
-            string FileType = Path.GetExtension(Attachment).ToLower();
-            if (FileType == ".doc")
+            var path = Path.Combine(Server.MapPath("~/Doc"), attachment);
+            var extension = Path.GetExtension(attachment);
+            if (extension != null)
             {
-                return File(new FileStream(path, FileMode.Open), "application/msword", Attachment);
+                var fileType = extension.ToLower();
+                if (fileType == ".doc")
+                {
+                    return File(new FileStream(path, FileMode.Open), "application/msword", attachment);
+                }
             }
-            else
-            {
-                return File(new FileStream(path, FileMode.Open), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", Attachment);
-            }
-
+            return File(new FileStream(path, FileMode.Open), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", attachment);
         }
 
-        public ViewResult Error(string msg,string id)
+        public ViewResult Error()
         {
-            ViewBag.Msg = msg;
-            ViewBag.Id = int.Parse(id);
             return View();
         }
 

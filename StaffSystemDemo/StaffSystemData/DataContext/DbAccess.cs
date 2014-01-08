@@ -13,7 +13,7 @@ namespace StaffSystemData.DataContext
     {
         IEnumerable<Staff> QueryAllStaffs();
         void Add(Staff staff);
-        Staff FindInfo(int Id);
+        Staff FindInfo(int id);
         void Edit(Staff staff);
         
     }
@@ -36,9 +36,9 @@ namespace StaffSystemData.DataContext
             _dbEntitiesdbContext.SaveChanges();
         }
 
-        public Staff FindInfo(int Id)
+        public Staff FindInfo(int id)
         {
-            return _dbEntitiesdbContext.Staff.Find(Id);
+            return _dbEntitiesdbContext.Staff.Find(id);
         }
 
         public void Edit(Staff staff)
@@ -47,7 +47,5 @@ namespace StaffSystemData.DataContext
             _dbEntitiesdbContext.SaveChanges();
 
         }
-
-        
     }
 }

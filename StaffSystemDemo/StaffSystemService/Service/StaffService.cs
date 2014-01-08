@@ -108,7 +108,7 @@ namespace StaffSystemService.Service
 
         public List<IndexViewModel.Staff> Search(string name)
         {
-            var staffList = QueryAllStaffs().Where(t => t.Name.Contains(name)).ToList();
+            var staffList = QueryAllStaffs().Where(t => t.Name!=null && t.Name.Contains(name)).ToList();
             return staffList;
         }
 
