@@ -21,40 +21,50 @@
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/jquery-2.0.3.js"></script>
     <script src="~/Scripts/jquery-2.0.3.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
     <script type="text/javascript">
-        $(function () {
+        $(document).ready(function() {
+            $("#StaffForm").validate();
+        });
 
-            $("#Add").click(function () {
-                var staff = {
-                    Name: $("#Name").val(),
-                    BirthDay: $("#BirthDay").val(),
-                    School: $("#School").val(),
-                    Address: $("#Address").val(),
-                    WorkExperience: $("#WorkExperience").val(),
-                    SelfAssessment: $("#SelfAssessment").val(),
-                };
+        $(function() {
 
-                $("#Add").attr("disabled", "disabled");
-           
-                $.ajax({
-                    url: "@Url.Action("AddStaff", "Staff")",
-                    type: "post",
+
+            $("#Add").click(function() {
+                if ($("#StaffForm").valid()) {
+                    var staff = {
+                        Name: $("#Name").val(),
+                        BirthDay: $("#BirthDay").val(),
+                        School: $("#School").val(),
+                        Address: $("#Address").val(),
+                        WorkExperience: $("#WorkExperience").val(),
+                        SelfAssessment: $("#SelfAssessment").val(),
+                    };
+
+                    $("#Add").attr("disabled", "disabled");
+
+                    $.ajax({
+                        url: "@Url.Action("AddStaff", "Staff")",
+                        type: "post",
                     data: staff,
-                    success: function () {
+                    success: function() {
                         window.location.href = "@Url.Action("Index", "Staff")";
                     },
-                    error: function () {
-                            window.location.href = "@Url.Action("Error", "Staff")";
+                    error: function() {
+                        window.location.href = "@Url.Action("Error", "Staff")";
                     }
-                });
-            });
+                    });
+                }
+                    
+              });
+            
 
-            $("#Search").click(function () {
-                var SearchName = $("#SearchName").val();
-                location.href = "/Staff/Search?name=" + SearchName;
-               @*@Url.Action("Search", "Staff", new { name = SearchName })*@
+            $("#Search").click(function() {
+                var searchName = $("#SearchName").val();
+                location.href = "/Staff/Search?name=" + searchName;
             });
-        })
+            
+        });
     </script>
 </head>
 
@@ -136,10 +146,10 @@
                     <h4 class="modal-title" id="myModalLabel">Add Staff</h4>
                 </div>
                 <div class="modal-body">
-                    <form role="form">
+                    <form role="form" id="StaffForm">
                         <div class="col-md-6">
                             <label class="control-label">Name</label>
-                            <input type="text" class="form-control" id="Name" placeholder="Enter Name">
+                            <input type="text" class="form-control required" id="Name" placeholder="Enter Name">
                         </div>
                         <div class="col-md-6">
                             <label class="control-label">BirthDay</label>

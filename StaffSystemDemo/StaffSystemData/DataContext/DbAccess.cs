@@ -9,14 +9,6 @@ using StaffSystemData.DataModel;
 
 namespace StaffSystemData.DataContext
 {
-    public interface IDbAccess
-    {
-        IEnumerable<Staff> QueryAllStaffs();
-        void Add(Staff staff);
-        Staff FindInfo(int id);
-        void Edit(Staff staff);
-        
-    }
     public class DbAccess :IDbAccess
     {
         private readonly StaffSystemDBEntities _dbEntitiesdbContext;

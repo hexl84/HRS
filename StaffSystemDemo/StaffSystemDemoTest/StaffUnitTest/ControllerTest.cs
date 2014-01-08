@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading;
+using System.Web;
+using System.Web.Routing;
 using System.Windows.Forms;
 using FluentAssertions;
 using StaffSystemService.Service;
@@ -36,30 +38,70 @@ namespace StaffSystemDemoTest.StaffUnitTest
 
             //Assert
             var viewResult = (ViewResult)result;
-            viewResult.Model.Should().BeOfType<IndexViewModel>();//返回的是否是model
-            (viewResult.Model as IndexViewModel).StaffList.Count.Should().Be(1);//测试返回的是否是返回list的count
+            viewResult.Model.Should().BeOfType<IndexViewModel>();
+            var indexViewModel = viewResult.Model as IndexViewModel;
+            if (indexViewModel != null)
+                indexViewModel.StaffList.Count.Should().Be(1);
         }
 
         [Test]
-        public void Test_Add_when_correctly()
+        public void Test_AddStaff_when_correctly()
         {
             //Arrange
-            IndexViewModel.Staff vmStaff = new IndexViewModel.Staff();
+            var vmStaff = new IndexViewModel.Staff();
             vmStaff.Name = "yg";
             vmStaff.BirthDay = DateTime.Parse("2014-01-02");
             vmStaff.School = "School";
             vmStaff.Address = "Address";
             vmStaff.WorkExperience = "WorkExperience";
 
-            IndexViewModel.Staff vmStaffEmpty = new IndexViewModel.Staff();
+            var staffServiceMock = new Mock<IStaffService>();
+            var staffServiceObject = staffServiceMock.Object;
+            var controller = new StaffController(staffServiceObject);
+
+            var count = 0;
+
+            //Act
+            staffServiceMock.Setup(t => t.Add(vmStaff)).Callback(() => count++);
+            controller.AddStaff(vmStaff);
+
+            //Assert
+            count.Should().Be(1);
+
+        }
+
+        [Test]
+        public void Test_Add()
+        {
+            //Arrange
+            var staffServiceMock = new Mock<IStaffService>();
+            var staffServiceObject = staffServiceMock.Object;
+            var controller = new StaffController(staffServiceObject);
+
+            //Act
+            var result=controller.Add();
+            
+            //Assert
+            var viewResult = (ViewResult)result;
+            viewResult.ViewName.Should().BeEmpty();
+        }
+
+        [Test]
+        public void Test_Add_when_correctly()
+        {
+            //Arrange
+            var vmStaff = new IndexViewModel.Staff();
+            vmStaff.Name = "yg";
+            vmStaff.BirthDay = DateTime.Parse("2014-01-02");
+            vmStaff.School = "School";
+            vmStaff.Address = "Address";
+            vmStaff.WorkExperience = "WorkExperience";
 
             var staffServiceMock = new Mock<IStaffService>();
             var staffServiceObject = staffServiceMock.Object;
             var controller = new StaffController(staffServiceObject);
 
-            var staffServiceMock1 = new Mock<IStaffService>();
-
-            int count = 0;
+            var count = 0;
 
             //Act
             staffServiceMock.Setup(t => t.Add(vmStaff)).Callback(() => count++);
@@ -69,31 +111,6 @@ namespace StaffSystemDemoTest.StaffUnitTest
             count.Should().Be(1);
 
         }
-
-        [Test]
-        [ExpectedException(typeof(Exception))]
-        public void Test_Add_When_Mistakenly()
-        {
-            //Arrange
-            IndexViewModel.Staff vmStaff = new IndexViewModel.Staff();
-            vmStaff.Id = -1;
-            vmStaff.Name = "yg";
-            vmStaff.BirthDay = DateTime.Parse("2014-01-02");
-            vmStaff.School = "School";
-            vmStaff.Address = "Address";
-            vmStaff.WorkExperience = "WorkExperience";
-
-            var staffServiceMock = new Mock<IStaffService>();
-            var staffServiceObject = staffServiceMock.Object;
-            var controller = new StaffController(staffServiceObject);
-             
-            //Act
-            staffServiceMock.Setup(t => t.Add(vmStaff)).Throws(new Exception("save failed !"));
-            controller.Add(vmStaff);
-            //Assert
-
-        }
-
 
         [Test]
         public void Test_Edit_By_Id()
@@ -121,7 +138,7 @@ namespace StaffSystemDemoTest.StaffUnitTest
         public void Test_Edit_By_Staff()
         {
             //Arrange
-            IndexViewModel.Staff vmStaff = new IndexViewModel.Staff();
+            var vmStaff = new IndexViewModel.Staff();
             vmStaff.Id = -1;
             vmStaff.Name = "yg";
             vmStaff.BirthDay = DateTime.Parse("2014-01-02");
@@ -148,8 +165,8 @@ namespace StaffSystemDemoTest.StaffUnitTest
         public void Test_Lock()
         {
             //Arrange
-            var state = "Lock";
-            var id = 1;
+            const string state = "Lock";
+            const int id = 1;
 
             var staffServiceMock = new Mock<IStaffService>();
             var staffServiceObject = staffServiceMock.Object;
@@ -170,8 +187,8 @@ namespace StaffSystemDemoTest.StaffUnitTest
         public void Test_UnLock()
         {
             //Arrange
-            var state = "UnLock";
-            var id = 1;
+            const string state = "UnLock";
+            const int id = 1;
 
             var staffServiceMock = new Mock<IStaffService>();
             var staffServiceObject = staffServiceMock.Object;
@@ -192,7 +209,7 @@ namespace StaffSystemDemoTest.StaffUnitTest
         public void Test_Search()
         {
             //Arrange
-            var name = "1";
+            const string name = "1";
             
             var staffServiceMock = new Mock<IStaffService>();
             var staffServiceObject = staffServiceMock.Object;
@@ -213,9 +230,260 @@ namespace StaffSystemDemoTest.StaffUnitTest
             //Assert
             var viewResult = (ViewResult)serchResult;
             viewResult.Model.Should().BeOfType<IndexViewModel>();
-            (viewResult.Model as IndexViewModel).StaffList.Count.Should().Be(1);
+            var indexViewModel = viewResult.Model as IndexViewModel;
+            if (indexViewModel != null)
+                indexViewModel.StaffList.Count.Should().Be(1);
         }
 
-       
+        //if file is empty
+        [Test]
+        public void Test_UploadPicture_When_EmptyFile()
+        {
+            //Arrange
+            const int staffId = 1;
+            
+            var staffServiceMock = new Mock<IStaffService>();
+            var staffServiceObject = staffServiceMock.Object;
+            var controller = new StaffController(staffServiceObject);
+
+            var httpPostedFileBase = new Mock<HttpPostedFileBase>();
+
+            var file = httpPostedFileBase.Object;
+            file = null;
+            //Act
+            var result = controller.UploadPicture(file, staffId);
+
+            //Assert
+            var viewResult = (ViewResult)result;
+            viewResult.ViewName.Should().Be("Error");
+        }
+
+
+        [Test]
+        public void Test_UploadPicture_ByFileType()
+        {
+            //Arrange
+            const int staffId = 1;
+            
+            var staffServiceMock = new Mock<IStaffService>();
+            var controller = new StaffController(staffServiceMock.Object);
+
+            var httpPostedFileBaseMock = new Mock<HttpPostedFileBase>();
+            httpPostedFileBaseMock.Setup(h => h.FileName).Returns(".gif");
+            var file = httpPostedFileBaseMock.Object;
+
+            //Act
+            var result = controller.UploadPicture(file, staffId);
+
+            //Assert  
+            var viewResult = (ViewResult)result;
+            viewResult.ViewName.Should().Be("Error");
+        }
+
+        [Test]
+        public void Test_UploadPicture_ByFileTypeAndLength()
+        {
+            //Arrange
+            const int staffId = 1;
+            
+            var staffServiceMock = new Mock<IStaffService>();
+            var controller = new StaffController(staffServiceMock.Object);
+
+            var httpPostedFileBaseMock = new Mock<HttpPostedFileBase>();
+            httpPostedFileBaseMock.Setup(h => h.FileName).Returns(".png");
+            httpPostedFileBaseMock.Setup(h => h.ContentLength).Returns(30720001);
+            var file = httpPostedFileBaseMock.Object;
+
+            //Act
+            var result = controller.UploadPicture(file, staffId);
+
+            //Assert  
+            var viewResult = (ViewResult)result;
+            viewResult.ViewName.Should().Be("Error");
+        }
+
+        [Test]
+        public void Test_UploadPicture_When_Success()
+        {
+            //Arrange
+            const int staffId = 2;
+            
+            var httpContextMock = new Mock<HttpContextBase>();
+            var httpServerMock = new Mock<HttpServerUtilityBase>();
+            httpServerMock.Setup(x => x.MapPath("~/Images/StaffImage")).Returns(@"D:\work\HRS\StaffSystemDemo\Web\Images\StaffImage");
+            httpContextMock.Setup(x => x.Server).Returns(httpServerMock.Object);
+
+            var staffServiceMock = new Mock<IStaffService>();
+            var controller = new StaffController(staffServiceMock.Object);
+            controller.ControllerContext = new ControllerContext(httpContextMock.Object, new RouteData(), controller);
+
+            staffServiceMock.Setup(x => x.FindInfo(2)).Returns(new IndexViewModel.Staff()
+            {
+                Name = "yg",
+                Address = "Address",
+
+            });
+
+            var httpPostedFileBaseMock = new Mock<HttpPostedFileBase>();
+            httpPostedFileBaseMock.Setup(h => h.FileName).Returns(".jpeg");
+            var file = httpPostedFileBaseMock.Object;
+
+            //Act
+            var result = controller.UploadPicture(file, staffId);
+            var viewResult = (ViewResult)result;
+            var indexViewModelStaff = viewResult.Model as IndexViewModel.Staff;
+
+            //Assert
+            indexViewModelStaff.Should().NotBeNull();
+            viewResult.Model.Should().BeOfType<IndexViewModel.Staff>();
+            indexViewModelStaff.Picture.Should().Be("2.jpeg");
+            viewResult.ViewName.Should().Be("Edit");
+
+            httpPostedFileBaseMock.Verify(x => x.SaveAs(@"D:\work\HRS\StaffSystemDemo\Web\Images\StaffImage\2.jpeg"));
+        }
+
+        //if file is empty
+        [Test]
+        public void Test_UploadAttachment_When_EmptyFile()
+        {
+            //Arrange
+            const int staffId = 1;
+
+            var staffServiceMock = new Mock<IStaffService>();
+            var staffServiceObject = staffServiceMock.Object;
+            var controller = new StaffController(staffServiceObject);
+
+            var httpPostedFileBase = new Mock<HttpPostedFileBase>();
+
+            var file = httpPostedFileBase.Object;
+            file = null;
+            //Act
+            var result = controller.UploadAttachment(file, staffId);
+
+            //Assert
+            var viewResult = (ViewResult)result;
+            viewResult.ViewName.Should().Be("Error");
+        }
+
+
+        [Test]
+        public void Test_UploadAttachment_ByFileType()
+        {
+            //Arrange
+            const int staffId = 1;
+
+            var staffServiceMock = new Mock<IStaffService>();
+            var controller = new StaffController(staffServiceMock.Object);
+
+            var httpPostedFileBaseMock = new Mock<HttpPostedFileBase>();
+            httpPostedFileBaseMock.Setup(h => h.FileName).Returns(".docxx");
+            var file = httpPostedFileBaseMock.Object;
+
+            //Act
+            var result = controller.UploadAttachment(file, staffId);
+
+            //Assert  
+            var viewResult = (ViewResult)result;
+            viewResult.ViewName.Should().Be("Error");
+        }
+
+        [Test]
+        public void Test_UploadAttachment_ByFileTypeAndLength()
+        {
+            //Arrange
+            const int staffId = 1;
+
+            var staffServiceMock = new Mock<IStaffService>();
+            var controller = new StaffController(staffServiceMock.Object);
+
+            var httpPostedFileBaseMock = new Mock<HttpPostedFileBase>();
+            httpPostedFileBaseMock.Setup(h => h.FileName).Returns(".doc");
+            httpPostedFileBaseMock.Setup(h => h.ContentLength).Returns(102400001);
+            var file = httpPostedFileBaseMock.Object;
+
+            //Act
+            var result = controller.UploadAttachment(file, staffId);
+
+            //Assert  
+            var viewResult = (ViewResult)result;
+            viewResult.ViewName.Should().Be("Error");
+        }
+
+        [Test]
+        public void Test_UploadAttachment_When_Success()
+        {
+            //Arrange
+            const int staffId = 2;
+
+            var httpContextMock = new Mock<HttpContextBase>();
+            var httpServerMock = new Mock<HttpServerUtilityBase>();
+            httpServerMock.Setup(x => x.MapPath("~/Doc")).Returns(@"D:\work\HRS\StaffSystemDemo\Web\Doc");
+            httpContextMock.Setup(x => x.Server).Returns(httpServerMock.Object);
+
+            var staffServiceMock = new Mock<IStaffService>();
+            var controller = new StaffController(staffServiceMock.Object);
+            controller.ControllerContext = new ControllerContext(httpContextMock.Object, new RouteData(), controller);
+
+            staffServiceMock.Setup(x => x.FindInfo(2)).Returns(new IndexViewModel.Staff()
+            {
+                Name = "yg",
+                Address = "Address",
+            });
+
+            var httpPostedFileBaseMock = new Mock<HttpPostedFileBase>();
+            httpPostedFileBaseMock.Setup(h => h.FileName).Returns(".doc");
+            var file = httpPostedFileBaseMock.Object;
+
+            //Act
+            var result = controller.UploadAttachment(file, staffId);
+            var viewResult = (ViewResult)result;
+            var indexViewModelStaff = viewResult.Model as IndexViewModel.Staff;
+
+            //Assert
+            indexViewModelStaff.Should().NotBeNull();
+            viewResult.Model.Should().BeOfType<IndexViewModel.Staff>();
+            indexViewModelStaff.Attachment.Should().Be("2.doc");
+            viewResult.ViewName.Should().Be("Edit");
+
+            httpPostedFileBaseMock.Verify(x => x.SaveAs(@"D:\work\HRS\StaffSystemDemo\Web\Doc\2.doc"));
+        }
+
+        [Test]
+        public void Test_OpenFile_When_Success()
+        {
+            //Arrange
+            const string attachment = "1.doc";
+
+            var httpContextMock = new Mock<HttpContextBase>();
+            var httpServerMock = new Mock<HttpServerUtilityBase>();
+            httpServerMock.Setup(x => x.MapPath("~/Doc")).Returns(@"D:\work\HRS\StaffSystemDemo\Web\Doc");
+            httpContextMock.Setup(x => x.Server).Returns(httpServerMock.Object);
+
+            var staffServiceMock = new Mock<IStaffService>();
+            var controller = new StaffController(staffServiceMock.Object);
+            controller.ControllerContext = new ControllerContext(httpContextMock.Object, new RouteData(), controller);
+            //Act
+            var result = controller.OpenFile(attachment);
+            
+            //Assert
+            result.FileStream.Should().NotBeNull();
+        }
+
+        [Test]
+        public void Test_Error()
+        {
+            //Arrange
+            var staffServiceMock = new Mock<IStaffService>();
+            var staffServiceObject = staffServiceMock.Object;
+            var controller = new StaffController(staffServiceObject);
+
+            //Act
+            var result = controller.Error();
+
+            //Assert
+            var viewResult = (ViewResult)result;
+            viewResult.ViewName.Should().BeEmpty();
+        }
+        
     }
 }

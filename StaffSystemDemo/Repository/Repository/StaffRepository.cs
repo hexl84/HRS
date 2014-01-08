@@ -8,15 +8,6 @@ using StaffSystemData.DataModel;
 
 namespace Repository.Repository
 {
-    public interface IStaffRepository
-    {
-        IEnumerable<Staff> QueryAllStaffs();
-        void Add(Staff staff);
-        Staff FindInfo(int Id);
-        void Edit(Staff staff);
-       
-    }
-
     public class StaffRepository : IStaffRepository
     {
         private readonly IDbAccess _dbAccess;

@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="DataBase\StaffSystemDBEntities.cs" />
     <Compile Include="DataContext\DbAccess.cs" />
+    <Compile Include="DataContext\IDbAccess.cs" />
     <Compile Include="DataModel\Staff.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

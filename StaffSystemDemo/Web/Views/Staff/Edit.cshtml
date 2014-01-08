@@ -8,22 +8,33 @@
 
 <div>
 
-@using (Html.BeginForm("Upload", "Staff", FormMethod.Post, new { ID = "uploadPic", enctype = "multipart/form-data" }))
+@using (Html.BeginForm("UploadPicture", "Staff", FormMethod.Post, new { ID = "uploadPic", enctype = "multipart/form-data" }))
 {
-    <div>
-      
-        @Html.RadioButton("UploadFile", "Picture", true, new { @id = "radioP", @name = "Picture",style="width: 10px;"})Picture
-        @Html.RadioButton("UploadFile", "Attachment", false, new { @id = "radioA", @name = "Attachment", style = "width: 10px;" })Attachment
-        
-    </div>
     
-
+    <div>
+        Picture
+    </div>
+    <div>
+        <input type="hidden" value="@Model.Id" name="staffId" />
         <input type="file" name="head" />
         <input type="submit" value="Upload" />
-        <input type="hidden" value="@Model.Id" name="IdUpload" />
+    </div>
 
 }
-   
+
+@using (Html.BeginForm("UploadAttachment", "Staff", FormMethod.Post, new { ID = "uploadAtt", enctype = "multipart/form-data" }))
+{
+
+    <div>
+        Attachment
+    </div>
+    <div>
+        <input type="hidden" value="@Model.Id" name="staffId" />
+        <input type="file" name="head" />
+        <input type="submit" value="Upload" />
+    </div>
+
+}  
 
 </div>
 
@@ -93,8 +104,8 @@
         <div class="editor-field">
             @if (!string.IsNullOrEmpty(Model.Attachment))
             {
-                @Html.ActionLink("OpenFile", "OpenFile", new { Attachment = Model.Attachment })
-                <a href="/Doc/@Html.ValueFor(model=>model.Attachment)">@Html.DisplayFor(model => model.Attachment)</a>
+                @Html.ActionLink("OpenFile", "OpenFile", new { attachment = Model.Attachment })
+                @*<a href="~/Doc/@Html.ValueFor(model=>model.Attachment)">@Html.DisplayFor(model => model.Attachment)</a>*@
             }
            
         </div>
@@ -103,6 +114,8 @@
         </p>
     </fieldset>
 }
+
+
 
 <div>
     

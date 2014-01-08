@@ -7,15 +7,6 @@ using StaffSystemViewModel;
 
 namespace StaffSystemService.Service
 {
-    public interface IStaffService
-    {
-        List<IndexViewModel.Staff> QueryAllStaffs();
-        void Add(IndexViewModel.Staff staff);
-        IndexViewModel.Staff FindInfo(int Id);
-        void Edit(IndexViewModel.Staff staff);
-        void Lock(int Id, string state);
-        List<IndexViewModel.Staff> Search(string name);
-    }
     public class StaffService : IStaffService
     {
         private readonly IStaffRepository _staffRepository;
@@ -40,37 +31,38 @@ namespace StaffSystemService.Service
             }).ToList();
         }
 
-        public void Add(IndexViewModel.Staff vm_staff)
+        public void Add(IndexViewModel.Staff vmStaff)
         {
-            Staff staff = new Staff();
-            staff.Id = vm_staff.Id;
-            staff.Name = vm_staff.Name;
-            staff.BirthDay = vm_staff.BirthDay;
-            staff.School = vm_staff.School;
-            staff.Address = vm_staff.Address;
-            staff.WorkExperience = vm_staff.WorkExperience;
-            staff.SelfAssessment = vm_staff.SelfAssessment;
+            var staff = new Staff();
+            staff.Id = vmStaff.Id;
+            staff.Name = vmStaff.Name;
+            staff.BirthDay = vmStaff.BirthDay;
+            staff.School = vmStaff.School;
+            staff.Address = vmStaff.Address;
+            staff.WorkExperience = vmStaff.WorkExperience;
+            staff.SelfAssessment = vmStaff.SelfAssessment;
             staff.Lock = false;
-            staff.Picture = vm_staff.Picture;
-            staff.Attachment = vm_staff.Attachment;
+            staff.Picture = vmStaff.Picture;
+            staff.Attachment = vmStaff.Attachment;
             _staffRepository.Add(staff);
         }
 
-        public IndexViewModel.Staff FindInfo(int Id)
+        public IndexViewModel.Staff FindInfo(int id)
         {
-            Staff staff = _staffRepository.FindInfo(Id);
-            IndexViewModel.Staff vmStaff = new IndexViewModel.Staff();
-
-            vmStaff.Id = staff.Id;
-            vmStaff.Name = staff.Name;
-            vmStaff.BirthDay = staff.BirthDay;
-            vmStaff.School = staff.School;
-            vmStaff.Address = staff.Address;
-            vmStaff.WorkExperience = staff.WorkExperience;
-            vmStaff.SelfAssessment = staff.SelfAssessment;
-            vmStaff.Lock = staff.Lock;
-            vmStaff.Picture = staff.Picture;
-            vmStaff.Attachment = staff.Attachment;
+            var staff = _staffRepository.FindInfo(id);
+            var vmStaff = new IndexViewModel.Staff
+            {
+                Id = staff.Id,
+                Name = staff.Name,
+                BirthDay = staff.BirthDay,
+                School = staff.School,
+                Address = staff.Address,
+                WorkExperience = staff.WorkExperience,
+                SelfAssessment = staff.SelfAssessment,
+                Lock = staff.Lock,
+                Picture = staff.Picture,
+                Attachment = staff.Attachment
+            };
 
             return vmStaff;
         }
@@ -91,18 +83,11 @@ namespace StaffSystemService.Service
             _staffRepository.Edit(staff);
         }
 
-        public void Lock(int Id, string state)
+        public void Lock(int id, string state)
         {
 
-            var staff = _staffRepository.FindInfo(Id);
-            if (state == "Lock")
-            {
-                staff.Lock = true;
-            }
-            else
-            {
-                staff.Lock = false;
-            }
+            var staff = _staffRepository.FindInfo(id);
+            staff.Lock = state == "Lock";
             _staffRepository.Edit(staff);
         }
 

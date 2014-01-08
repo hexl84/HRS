@@ -18,7 +18,7 @@ namespace StaffSystemDemo.Web
     // visit http://go.microsoft.com/?LinkId=9394801
     public class MvcApplication : System.Web.HttpApplication
     {
-        private static IWindsorContainer container;
+        private static IWindsorContainer _container;
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -29,24 +29,24 @@ namespace StaffSystemDemo.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
     
 
-            var container = new WindsorContainer();
-            container.Install(FromAssembly.This());
+            _container = new WindsorContainer();
+            _container.Install(FromAssembly.This());
 
-            container.Register(Classes.FromThisAssembly().BasedOn<IController>().LifestyleTransient());
-            container.Register(Component.For<IDbAccess>().ImplementedBy<DbAccess>().LifestylePerWebRequest());
-            container.Register(Component.For<IStaffRepository>().ImplementedBy<StaffRepository>().LifestylePerWebRequest());
-            container.Register(Component.For<IStaffService>().ImplementedBy<StaffService>().LifestylePerWebRequest());
-            container.Register(Component.For<StaffSystemDBEntities>().LifestyleSingleton());
+            _container.Register(Classes.FromThisAssembly().BasedOn<IController>().LifestyleTransient());
+            _container.Register(Component.For<IDbAccess>().ImplementedBy<DbAccess>().LifestylePerWebRequest());
+            _container.Register(Component.For<IStaffRepository>().ImplementedBy<StaffRepository>().LifestylePerWebRequest());
+            _container.Register(Component.For<IStaffService>().ImplementedBy<StaffService>().LifestylePerWebRequest());
+            _container.Register(Component.For<StaffSystemDBEntities>().LifestyleSingleton());
 
-            var controllerFactory = new WindsorControllerFactory(container);
+            var controllerFactory = new WindsorControllerFactory(_container);
             ControllerBuilder.Current.SetControllerFactory(controllerFactory);
         }
 
         protected void Application_End()
         {
-            if (container != null)
+            if (_container != null)
             {
-                container.Dispose();
+                _container.Dispose();
             }
 
         }

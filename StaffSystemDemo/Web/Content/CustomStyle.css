@@ -8,3 +8,9 @@
 .custom_div_margin_top {
     margin-top: 10px;
 }
+
+#StaffForm label.error {
+        padding-left: 16px;
+        margin-left: 2px;
+        color: red;
+    }
