@@ -1,0 +1,10 @@
+﻿
+/* Set the button's border to transparent*/
+.custom_btn {
+    border-color: transparent;
+}
+
+/* Set the div spacing */
+.custom_div_margin_top {
+    margin-top: 10px;
+}
