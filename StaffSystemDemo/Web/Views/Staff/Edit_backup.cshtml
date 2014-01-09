@@ -1,0 +1,127 @@
+﻿@model StaffSystemViewModel.IndexViewModel.Staff
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+<div>
+
+@using (Html.BeginForm("UploadPicture", "Staff", FormMethod.Post, new { ID = "uploadPic", enctype = "multipart/form-data" }))
+{
+    
+    <div>
+        Picture
+    </div>
+    <div>
+        <input type="hidden" value="@Model.Id" name="staffId" />
+        <input type="file" name="head" />
+        <input type="submit" value="Upload" />
+    </div>
+
+}
+
+@using (Html.BeginForm("UploadAttachment", "Staff", FormMethod.Post, new { ID = "uploadAtt", enctype = "multipart/form-data" }))
+{
+
+    <div>
+        Attachment
+    </div>
+    <div>
+        <input type="hidden" value="@Model.Id" name="staffId" />
+        <input type="file" name="head" />
+        <input type="submit" value="Upload" />
+    </div>
+
+}  
+
+</div>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Staff</legend>
+
+        @Html.HiddenFor(model => model.Id)
+        <div style="float:right" id="Pic">
+            @if (string.IsNullOrEmpty(Model.Picture))
+            {
+                <img src="~/Images/nodata.jpg" style="width: 180px; height: 180px" />
+            }
+            else
+            {
+                <img src="~/Images/StaffImage/@Html.ValueFor(model=>model.Picture)" style="width: 180px; height: 180px" />
+            }
+            
+        </div>
+        <div class="editor-label">
+            Name
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Name)
+        </div>
+
+        <div class="editor-label">
+            BirthDay
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.BirthDay)
+        </div>
+
+        <div class="editor-label">
+            School
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.School)
+        </div>
+
+        <div class="editor-label">
+            Address
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Address)
+        </div>
+
+        <div class="editor-label">
+            WorkExperience
+        </div>
+        <div class="editor-field">
+            @Html.TextAreaFor(model => model.WorkExperience)
+        </div>
+
+        <div class="editor-label">
+            SelfAssessment
+        </div>
+        <div class="editor-field">
+            @Html.TextAreaFor(model => model.SelfAssessment)
+        </div>
+        <div class="editor-label">
+           Attachment
+        </div>
+        <div class="editor-field">
+            @if (!string.IsNullOrEmpty(Model.Attachment))
+            {
+                @Html.ActionLink("OpenFile", "OpenFile", new { attachment = Model.Attachment })
+            }
+           
+        </div>
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+
+
+<div>
+    
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    }
