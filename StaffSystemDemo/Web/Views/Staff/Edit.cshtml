@@ -1,128 +1,205 @@
 ﻿@model StaffSystemViewModel.IndexViewModel.Staff
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-@{
-    ViewBag.Title = "Edit";
-}
+    <title>add Bootstrap</title>
 
-<h2>Edit</h2>
+    <link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/CustomStyle.css" rel="stylesheet" />
 
-<div>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-2.0.3.js"></script>
+    <script src="~/Scripts/jquery-2.0.3.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        //$("#StaffForm").validate();
+        //$("body").on("click", "#Edit", function () {
+        //    $("#uploadPic").submit();
+        //    $("#uploadAtt").submit();
+        //});
+    });
 
-@using (Html.BeginForm("UploadPicture", "Staff", FormMethod.Post, new { ID = "uploadPic", enctype = "multipart/form-data" }))
-{
-    
-    <div>
-        Picture
-    </div>
-    <div>
-        <input type="hidden" value="@Model.Id" name="staffId" />
-        <input type="file" name="head" />
-        <input type="submit" value="Upload" />
-    </div>
+    $(function () {
 
-}
+        $("#Edit").click(function () {
+            if ($("#Name").val() == "") { alert("Name is not empty!!"); return false; }
+            var staff = {
+                Id: $("#Id").val(),
+                Name: $("#Name").val(),
+                BirthDay: $("#BirthDay").val(),
+                School: $("#School").val(),
+                Address: $("#Address").val(),
+                WorkExperience: $("#WorkExperience").val(),
+                SelfAssessment: $("#SelfAssessment").val(),
+                Picture: $("#Picture").val(),
+                Attachment: $("#Attachment").val()
+            };
 
-@using (Html.BeginForm("UploadAttachment", "Staff", FormMethod.Post, new { ID = "uploadAtt", enctype = "multipart/form-data" }))
-{
+            $("#Edit").attr("disabled", "disabled");
 
-    <div>
-        Attachment
-    </div>
-    <div>
-        <input type="hidden" value="@Model.Id" name="staffId" />
-        <input type="file" name="head" />
-        <input type="submit" value="Upload" />
-    </div>
-
-}  
-
-</div>
-
-@using (Html.BeginForm()) {
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true)
-
-    <fieldset>
-        <legend>Staff</legend>
-
-        @Html.HiddenFor(model => model.Id)
-        <div style="float:right" id="Pic">
-            @if (string.IsNullOrEmpty(Model.Picture))
-            {
-                <img src="~/Images/nodata.jpg" style="width: 180px; height: 180px" />
-            }
-            else
-            {
-                <img src="~/Images/StaffImage/@Html.ValueFor(model=>model.Picture)" style="width: 180px; height: 180px" />
-            }
+            $.ajax({
+                url: "@Url.Action("Edit", "Staff")",
+                type: "post",
+                data: staff,
+                success: function () {
+                    window.location.href = "@Url.Action("Index", "Staff")";
+                },
+                error: function () {
+                    window.location.href = "@Url.Action("Error", "Staff")";
+                        }
+                    });
             
-        </div>
-        <div class="editor-label">
-            Name
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Name)
+        });
+
+        $("#btnUploadPic").click(function () {
+            $("#uploadPic").submit();
+            window.refresh();
+        });
+        
+        $("#btnUploadAtt").click(function () {
+            $("#uploadAtt").submit();
+        });
+        $("#GoToList").click(function() {
+            window.location.href ="@Url.Action("Index","Staff")";
+        });
+    });
+
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <h3 class="text-muted">Staff Sys</h3>
         </div>
 
-        <div class="editor-label">
-            BirthDay
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.BirthDay)
+        <h4 class="modal-title" id="myModalLabel">Edit Staff</h4>
+        <div id="StaffForm">
+            <form method="POST" action="@Url.Action("Edit","Staff")">
+                <input type="hidden" name="Id" value="@Model.Id" />
+                <input type="hidden" name="Picture" value="@Model.Picture" />
+                <input type="hidden" name="Attachment" value="@Model.Attachment" />
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="control-label">Name</label>
+                        <input type="text" class="form-control required" id="Name" value="@Model.Name">
+
+                        <label class="control-label">BirthDay</label>
+                        <input type="date" class="form-control" id="BirthDay" value="@Model.BirthDay">
+
+                        <label>School</label>
+                        <input type="text" class="form-control" id="School" value="@Model.School">
+
+                        <label>Address</label>
+                        <input type="text" class="form-control" id="Address" value="@Model.Address">
+                    </div>
+                    <div class="col-md-6">
+
+                        @if (string.IsNullOrEmpty(Model.Picture))
+                        {
+                            <img src="~/Images/nodata.jpg" class="imageHeightWidth" alt="" />
+                        }
+                        else
+                        {
+                            <img src="~/Images/StaffImage/@Html.ValueFor(model=>model.Picture)" class="imageHeightWidth" alt="" />
+                        }
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-default custom_btn custom_div_margin_top" type="button" data-toggle="modal" data-target="#myEditPicture">UploadPicture</button>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <label>WorkExperience</label>
+                        <textarea class="form-control" id="WorkExperience">@Model.WorkExperience</textarea>
+
+                        <label>SelfAssessment</label>
+                        <textarea class="form-control" id="SelfAssessment">@Model.SelfAssessment</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Attachment</label>
+                </div>
+                <div class="form-group">
+                    @if (!string.IsNullOrEmpty(Model.Attachment))
+                    {
+                        @Html.ActionLink(@Model.Attachment, "OpenFile", new { attachment = Model.Attachment })
+                    }
+                </div>
+            </form>
+            <div class="form-group">
+                
+                    <div>
+                        @*<button class="btn btn-default custom_btn" type="button" data-toggle="modal" data-target="#myEditPicture">UploadPicture</button>*@
+                    </div>
+
+            </div>
+            <div class="modal fade" id="myEditPicture" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        
+                        <div class="modal-body">
+                            @using (Html.BeginForm("UploadPicture", "Staff", FormMethod.Post, new { ID = "uploadPic", enctype = "multipart/form-data" }))
+                            {
+
+                                <label>UploadPicture</label>
+                                <div>
+                                    <input type="hidden" value="@Model.Id" name="staffId" />
+                                    <input type="file" name="head" />
+                                    <input type="button" id="btnUploadPic" value="Upload" />
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+
+                <div>
+                    <button class="btn btn-default custom_btn" type="button" data-toggle="modal" data-target="#myEditAttachment">UploadAttachment</button>
+                </div>
+
+            </div>
+            <div class="modal fade" id="myEditAttachment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-body">
+                            @using (Html.BeginForm("UploadAttachment", "Staff", FormMethod.Post, new { ID = "uploadAtt", enctype = "multipart/form-data" }))
+                            {
+
+                                <label>UploadAttachment</label>
+                                <div>
+                                    <input type="hidden" value="@Model.Id" name="staffId" />
+                                    <input type="file" name="head" />
+                                    <input type="button" id="btnUploadAtt" value="Upload" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+          
         </div>
 
-        <div class="editor-label">
-            School
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.School)
-        </div>
+        <button id="Edit" type="button" class="btn btn-default">Save</button>
+        <button id="GoToList" type="button" class="btn btn-default">go to list</button>
 
-        <div class="editor-label">
-            Address
-        </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Address)
-        </div>
+    </div>
 
-        <div class="editor-label">
-            WorkExperience
-        </div>
-        <div class="editor-field">
-            @Html.TextAreaFor(model => model.WorkExperience)
-        </div>
-
-        <div class="editor-label">
-            SelfAssessment
-        </div>
-        <div class="editor-field">
-            @Html.TextAreaFor(model => model.SelfAssessment)
-        </div>
-        <div class="editor-label">
-           Attachment
-        </div>
-        <div class="editor-field">
-            @if (!string.IsNullOrEmpty(Model.Attachment))
-            {
-                @Html.ActionLink("OpenFile", "OpenFile", new { attachment = Model.Attachment })
-                @*<a href="~/Doc/@Html.ValueFor(model=>model.Attachment)">@Html.DisplayFor(model => model.Attachment)</a>*@
-            }
-           
-        </div>
-        <p>
-            <input type="submit" value="Save" />
-        </p>
-    </fieldset>
-}
-
-
-
-<div>
     
-    @Html.ActionLink("Back to List", "Index")
-</div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-
-    }
+    
+</body>
+</html>

@@ -317,8 +317,9 @@ namespace StaffSystemDemoTest.StaffUnitTest
             var controller = new StaffController(staffServiceMock.Object);
             controller.ControllerContext = new ControllerContext(httpContextMock.Object, new RouteData(), controller);
 
-            staffServiceMock.Setup(x => x.FindInfo(2)).Returns(new IndexViewModel.Staff()
+            staffServiceMock.Setup(x => x.FindInfo(staffId)).Returns(new IndexViewModel.Staff()
             {
+                Id = staffId,
                 Name = "yg",
                 Address = "Address",
 
@@ -330,16 +331,25 @@ namespace StaffSystemDemoTest.StaffUnitTest
 
             //Act
             var result = controller.UploadPicture(file, staffId);
-            var viewResult = (ViewResult)result;
-            var indexViewModelStaff = viewResult.Model as IndexViewModel.Staff;
+            var redirectToRouteResult = (RedirectToRouteResult)result;
+            
 
             //Assert
-            indexViewModelStaff.Should().NotBeNull();
-            viewResult.Model.Should().BeOfType<IndexViewModel.Staff>();
-            indexViewModelStaff.Picture.Should().Be("2.jpeg");
-            viewResult.ViewName.Should().Be("Edit");
+            redirectToRouteResult.RouteValues["action"].Should().Be("Edit");
+            redirectToRouteResult.RouteValues["id"].Should().Be(staffId);
+            ////Act
+            //var result = controller.UploadPicture(file, staffId);
+            //var viewResult = (ViewResult)result;
+            //var indexViewModelStaff = viewResult.Model as IndexViewModel.Staff;
 
-            httpPostedFileBaseMock.Verify(x => x.SaveAs(@"D:\work\HRS\StaffSystemDemo\Web\Images\StaffImage\2.jpeg"));
+            ////Assert
+
+            //indexViewModelStaff.Should().NotBeNull();
+            //viewResult.Model.Should().BeOfType<IndexViewModel.Staff>();
+            //indexViewModelStaff.Picture.Should().Be("2.jpeg");
+            //viewResult.ViewName.Should().Be("Edit");
+
+            //httpPostedFileBaseMock.Verify(x => x.SaveAs(@"D:\work\HRS\StaffSystemDemo\Web\Images\StaffImage\2.jpeg"));
         }
 
         //if file is empty
@@ -424,8 +434,9 @@ namespace StaffSystemDemoTest.StaffUnitTest
             var controller = new StaffController(staffServiceMock.Object);
             controller.ControllerContext = new ControllerContext(httpContextMock.Object, new RouteData(), controller);
 
-            staffServiceMock.Setup(x => x.FindInfo(2)).Returns(new IndexViewModel.Staff()
+            staffServiceMock.Setup(x => x.FindInfo(staffId)).Returns(new IndexViewModel.Staff()
             {
+                Id = staffId,
                 Name = "yg",
                 Address = "Address",
             });
@@ -436,23 +447,32 @@ namespace StaffSystemDemoTest.StaffUnitTest
 
             //Act
             var result = controller.UploadAttachment(file, staffId);
-            var viewResult = (ViewResult)result;
-            var indexViewModelStaff = viewResult.Model as IndexViewModel.Staff;
+            var redirectToRouteResult = (RedirectToRouteResult)result;
+
 
             //Assert
-            indexViewModelStaff.Should().NotBeNull();
-            viewResult.Model.Should().BeOfType<IndexViewModel.Staff>();
-            indexViewModelStaff.Attachment.Should().Be("2.doc");
-            viewResult.ViewName.Should().Be("Edit");
+            redirectToRouteResult.RouteValues["action"].Should().Be("Edit");
+            redirectToRouteResult.RouteValues["id"].Should().Be(staffId);
 
-            httpPostedFileBaseMock.Verify(x => x.SaveAs(@"D:\work\HRS\StaffSystemDemo\Web\Doc\2.doc"));
+            ////Act
+            //var result = controller.UploadAttachment(file, staffId);
+            //var viewResult = (ViewResult)result;
+            //var indexViewModelStaff = viewResult.Model as IndexViewModel.Staff;
+
+            ////Assert
+            //indexViewModelStaff.Should().NotBeNull();
+            //viewResult.Model.Should().BeOfType<IndexViewModel.Staff>();
+            //indexViewModelStaff.Attachment.Should().Be("yg.doc");
+            //viewResult.ViewName.Should().Be("Edit");
+
+            //httpPostedFileBaseMock.Verify(x => x.SaveAs(@"D:\work\HRS\StaffSystemDemo\Web\Doc\yg.doc"));
         }
 
         [Test]
         public void Test_OpenFile_When_Success()
         {
             //Arrange
-            const string attachment = "1.doc";
+            const string attachment = "test.docx";
 
             var httpContextMock = new Mock<HttpContextBase>();
             var httpServerMock = new Mock<HttpServerUtilityBase>();

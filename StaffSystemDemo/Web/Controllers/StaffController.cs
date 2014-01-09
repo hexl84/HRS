@@ -40,7 +40,7 @@ namespace StaffSystemDemo.Web.Controllers
         {
             _staffService.Add(staff);
             return RedirectToAction("Index");
-            
+
         }
 
         //by ajax request
@@ -69,15 +69,15 @@ namespace StaffSystemDemo.Web.Controllers
 
         public ActionResult Lock(string state, int id = 0)
         {
-                _staffService.Lock(id, state);
-                return RedirectToAction("Index");
+            _staffService.Lock(id, state);
+            return RedirectToAction("Index");
         }
 
-        public ActionResult Search(string name)
+        public ActionResult Search(string parameter)
         {
             var indexModel = new IndexViewModel
             {
-                StaffList = _staffService.Search(name)
+                StaffList = _staffService.Search(parameter)
             };
 
             return View("Index", indexModel);
@@ -85,7 +85,7 @@ namespace StaffSystemDemo.Web.Controllers
 
         //image upload
         [HttpPost]
-        public ActionResult UploadPicture(HttpPostedFileBase head, int staffId)
+        public ActionResult UploadPicture(HttpPostedFileBase head, int staffPicId)
         {
 
             if (head == null)
@@ -93,7 +93,7 @@ namespace StaffSystemDemo.Web.Controllers
                 return View("Error");
             }
 
-            var staff = _staffService.FindInfo(staffId);
+            var staff = _staffService.FindInfo(staffPicId);
 
             var supportedTypes = new[] { ".jpg", ".jpeg", ".png", ".bmp" };
             var extension = Path.GetExtension(head.FileName);
@@ -102,18 +102,18 @@ namespace StaffSystemDemo.Web.Controllers
                 return View("Error");
             }
 
-            var filename = staffId + extension;
+            var filename = staffPicId + extension;
             var filepath = Path.Combine(Server.MapPath("~/Images/StaffImage"), filename);
             head.SaveAs(filepath);
 
             staff.Picture = filename;
             _staffService.Edit(staff);
-            return Edit(staffId);
+            return RedirectToAction("Edit", new { id = staff.Id });
             
         }
 
         [HttpPost]
-        public ActionResult UploadAttachment(HttpPostedFileBase head, int staffId)
+        public ActionResult UploadAttachment(HttpPostedFileBase head, int staffAttId)
         {
 
             if (head == null)
@@ -121,23 +121,23 @@ namespace StaffSystemDemo.Web.Controllers
                 return View("Error");
             }
 
-            var staff = _staffService.FindInfo(staffId);
+            var staff = _staffService.FindInfo(staffAttId);
 
-            var supportedTypes = new[] { ".doc", ".docx"};
+            var supportedTypes = new[] { ".doc", ".docx" };
             var extension = Path.GetExtension(head.FileName);
             if (!supportedTypes.Contains(extension) || head.ContentLength > 1024 * 1000 * 10)
             {
                 return View("Error");
             }
 
-            var filename = staffId + extension;
+            var filename = head.FileName;
             var filepath = Path.Combine(Server.MapPath("~/Doc"), filename);
             head.SaveAs(filepath);
 
             staff.Attachment = filename;
             _staffService.Edit(staff);
-            return Edit(staffId);
-            
+            return RedirectToAction("Edit", new { id = staff.Id });
+
         }
 
         public FileStreamResult OpenFile(string attachment)

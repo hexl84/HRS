@@ -172,6 +172,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Doc\test.docx" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Images\loadinggif.gif" />
     <Content Include="Images\nodata.jpg" />
@@ -191,6 +192,7 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
+    <Content Include="Views\Staff\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -208,7 +210,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Staff\Add.cshtml" />
-    <Content Include="Views\Staff\Edit.cshtml" />
+    <Content Include="Views\Staff\Edit_backup.cshtml" />
     <Content Include="Views\Staff\Error.cshtml" />
     <Content Include="Views\Staff\Index.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />

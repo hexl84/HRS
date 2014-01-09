@@ -13,4 +13,14 @@
         padding-left: 16px;
         margin-left: 2px;
         color: red;
-    }
+}
+
+.colhidden {
+    display: none;
+}
+
+.imageHeightWidth {
+    width: 135px;
+    height: 200px;
+}
+

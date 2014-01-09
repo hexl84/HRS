@@ -1,5 +1,5 @@
 ﻿@model StaffSystemViewModel.IndexViewModel
-          
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-   
+
     <title>add Bootstrap</title>
 
     <link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
@@ -23,14 +23,13 @@
     <script src="~/Scripts/jquery-2.0.3.min.js"></script>
     <script src="~/Scripts/jquery.validate.js"></script>
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
             $("#StaffForm").validate();
         });
 
-        $(function() {
+        $(function () {
 
-
-            $("#Add").click(function() {
+            $("#Add").click(function () {
                 if ($("#StaffForm").valid()) {
                     var staff = {
                         Name: $("#Name").val(),
@@ -46,25 +45,120 @@
                     $.ajax({
                         url: "@Url.Action("AddStaff", "Staff")",
                         type: "post",
-                    data: staff,
-                    success: function() {
-                        window.location.href = "@Url.Action("Index", "Staff")";
-                    },
-                    error: function() {
-                        window.location.href = "@Url.Action("Error", "Staff")";
-                    }
+                        data: staff,
+                        success: function () {
+                            window.location.href = "@Url.Action("Index", "Staff")";
+                        },
+                        error: function () {
+                            window.location.href = "@Url.Action("Error", "Staff")";
+                        }
                     });
                 }
-                    
-              });
-            
 
-            $("#Search").click(function() {
+            });
+
+
+            $("#Search").click(function () {
                 var searchName = $("#SearchName").val();
-                location.href = "/Staff/Search?name=" + searchName;
+                location.href = "/Staff/Search?parameter=" + searchName;
+            });
+
+            $("#Edit").click(function () {
+                if ($("#editName").val() == "") { alert("Name is not empty!!"); return false; }
+                var staff = {
+                    Id: $("#editId").val(),
+                    Name: $("#editName").val(),
+                    BirthDay: $("#editBirthDay").val(),
+                    School: $("#editSchool").val(),
+                    Address: $("#editAddress").val(),
+                    WorkExperience: $("#editWorkExperience").val(),
+                    SelfAssessment: $("#editSelfAssessment").val(),
+                    Picture: $("#editPicture").val(),
+                    Attachment: $("#editAttachment").val(),
+                    Lock: $("#editLock").val()
+                };
+
+                $("#Edit").attr("disabled", "disabled");
+
+                $.ajax({
+                    url: "@Url.Action("Edit", "Staff")",
+                    type: "post",
+                data: staff,
+                success: function () {
+                    window.location.href = "@Url.Action("Index", "Staff")";
+                },
+                error: function () {
+                    window.location.href = "@Url.Action("Error", "Staff")";
+                }
             });
             
         });
+
+        $("#btnUploadPic").click(function () {
+            $("#uploadPic").submit();
+            
+        });
+        
+        $("#btnUploadAtt").click(function () {
+            $("#uploadAtt").submit();
+        });
+        $("#GoToList").click(function() {
+            window.location.href ="@Url.Action("Index","Staff")";
+        });
+        });
+        
+
+        
+
+            
+        
+
+    </script>
+    <script type="text/javascript">
+
+        $("body").on("click", "#EditStaff", function () {
+            //var staffId = $(this).data('id');
+            //$("#Name").val(staffId);
+            //$(".modal-body #bookId").val(myBookId);
+            // As pointed out in comments,
+            // it is superfluous to have to manually call the modal.
+            //$("#myEditModal").modal("show");
+            var $this = $(this);
+            var id = $this.attr("data-id");
+            var selectTr = $("tr[data-id='" + id + "']");
+            var name = selectTr.children("td[data-member='Name']").text();
+            var birthDay = selectTr.children("td[data-member='BirthDay']").text();
+            var school = selectTr.children("td[data-member='School']").text();
+            var address = selectTr.children("td[data-member='Address']").text();
+            var workExperience = selectTr.children("td[data-member='WorkExperience']").text();
+            var selfAssessment = selectTr.children("td[data-member='SelfAssessment']").text();
+            var picture = selectTr.children("td[data-member='Picture']").text();
+            var attachment = selectTr.children("td[data-member='Attachment']").text();
+            var lock = selectTr.children("td[data-member='Lock']").text();
+            //var data = function(day) { throw new Error("Not implemented"); };
+            $("#editId").val(id);
+            $("#editName").val(name);
+            if (birthDay!="") {
+                $("#editBirthDay").val(new Date(birthDay));
+            }
+            
+            $("#editSchool").val(school);
+            $("#editAddress").val(address);
+            $("#editWorkExperience").val(workExperience);
+            $("#editSelfAssessment").val(selfAssessment);
+            //$("#editPicture").val(picture);
+            //$("#editAttachment").val(attachment);
+            $("#editLock").val(lock);
+            if (picture!="") {
+                $("#picScr").attr("src", "Images/StaffImage/" + picture);
+            } else {
+                $("#picScr").attr("src", "Images/nodata.jpg");
+            }
+            
+            $("#staffPicId").val(id);
+            $("#staffAttId").val(id);
+        });
+
     </script>
 </head>
 
@@ -79,9 +173,9 @@
             <div class="col-lg-6">
                 <div class="input-group">
                     <span class="input-group-btn">
-                        <button class="btn btn-default custom_btn" type="button" data-toggle="modal" data-target="#myModal">Create New</button>
+                        <button class="btn btn-default custom_btn" type="button" data-toggle="modal" data-target="#myAddModal">Create New</button>
                     </span>
-                  
+
                 </div>
             </div>
             <div class="col-lg-6">
@@ -103,21 +197,32 @@
                     <th>Address</th>
                     <th>WorkExperience</th>
                     <th>operate</th>
+                    <th class="colhidden">SelfAssessment</th>
+                    <th class="colhidden">Picture</th>
+                    <th class="colhidden">Attachment</th>
                 </tr>
 
                 @foreach (var item in Model.StaffList)
                 {
-                    <tr>
-                        <td>@item.Id</td>
-                        <td>@item.Name</td>
-                        <td>@item.BirthDay</td>
-                        <td>@item.School</td>
-                        <td>@item.Address</td>
-                        <td>@item.WorkExperience</td>
+                    <tr data-id="@item.Id">
+                        <td data-member="Id">@item.Id</td>
+                        <td data-member="Name">@item.Name</td>
+                        <td data-member="BirthDay">
+                            @if (@item.BirthDay.HasValue)
+                            {
+                                @item.BirthDay.Value.ToString("yyyy-MM-dd")
+                            }
+                        </td>
+                        <td data-member="School">@item.School</td>
+                        <td data-member="Address">@item.Address</td>
+                        <td data-member="WorkExperience">@item.WorkExperience</td>
                         <td>
                             @if (item.Lock)
                             {
                                 @Html.ActionLink("UnLock", "Lock", new { id = item.Id, state = "Unlock" })
+                                <a class="btn" href="#myEditModal" data-toggle="modal" data-id="@item.Id" id="EditStaff">Edit</a>
+                                @*<button class="btn btn-default custom_btn" type="button" data-toggle="modal" data-target="#myAddModal">Create New</button>
+                                    myEditModal*@
                             }
                             else
                             {
@@ -126,19 +231,23 @@
                                 @Html.ActionLink("Lock", "Lock", new { id = item.Id, state = "Lock" })
                             }
                         </td>
+                        <td data-member="SelfAssessment" class="colhidden">@item.SelfAssessment</td>
+                        <td data-member="Picture" class="colhidden">@item.Picture</td>
+                        <td data-member="Attachment" class="colhidden">@item.Attachment</td>
+                        <td data-member="Lock" class="colhidden">@item.Lock</td>
                     </tr>
                 }
 
             </table>
         </div>
 
-        
+
         <div>
             <p>&copy; Shinetech</p>
         </div>
     </div>
-    
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+    <div class="modal fade" id="myAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -147,39 +256,172 @@
                 </div>
                 <div class="modal-body">
                     <form role="form" id="StaffForm">
-                        <div class="col-md-6">
-                            <label class="control-label">Name</label>
-                            <input type="text" class="form-control required" id="Name" placeholder="Enter Name">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="control-label">Name</label>
+                                <input type="text" class="form-control required" id="Name" placeholder="Enter Name">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="control-label">BirthDay</label>
+                                <input type="date" class="form-control" id="BirthDay" placeholder="Enter BirthDay">
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label class="control-label">BirthDay</label>
-                            <input type="date" class="form-control" id="BirthDay" placeholder="Enter BirthDay">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>School</label>
+                                <input type="text" class="form-control" id="School" placeholder="Enter School">
+                            </div>
+                            <div class="col-md-6">
+                                <label>Address</label>
+                                <input type="text" class="form-control" id="Address" placeholder="Enter Address">
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label>School</label>
-                            <input type="text" class="form-control" id="School" placeholder="Enter School">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>WorkExperience</label>
+                                <textarea class="form-control" id="WorkExperience" placeholder="Enter WorkExperience"></textarea>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label>Address</label>
-                            <input type="text" class="form-control" id="Address" placeholder="Enter Address">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>SelfAssessment</label>
+                                <textarea class="form-control" id="SelfAssessment" placeholder="Enter SelfAssessment"></textarea>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>WorkExperience</label>
-                            <textarea class="form-control" id="WorkExperience" placeholder="Enter WorkExperience"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>SelfAssessment</label>
-                            <textarea class="form-control" id="SelfAssessment" placeholder="Enter SelfAssessment"></textarea>
-                        </div>
-                        <button type="submit" id="Add" class="btn btn-default">Submit</button>
                     </form>
-
                 </div>
                 <div class="modal-footer">
+                    <button type="submit" id="Add" class="btn btn-default">Submit</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="myEditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Staff</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="StaffForm">
+                        <form >
+                            <input type="hidden" name="editId" id="editId" value="" />
+                            <input type="hidden" name="editPicture" id="editPicture" value="" />
+                            <input type="hidden" name="editAttachment" id="editAttachment" value="" />
+                            <input type="hidden" name="editLock" id="editLock" value="" />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="control-label">Name</label>
+                                    <input type="text" class="form-control required" id="editName" value="">
+
+                                    <label class="control-label">BirthDay</label>
+                                    <input type="date" class="form-control" id="editBirthDay" value="">
+
+                                    <label>School</label>
+                                    <input type="text" class="form-control" id="editSchool" value="">
+
+                                    <label>Address</label>
+                                    <input type="text" class="form-control" id="editAddress" value="">
+                                </div>
+                                <div class="col-md-6">
+                                    
+                                    @*@if (string.IsNullOrEmpty(Model.Picture))
+                                        {
+                                            <img src="~/Images/nodata.jpg" class="imageHeightWidth" alt="" />
+                                        }
+                                        else
+                                        {*@
+                                    <img id="picScr" name="picScr" class="imageHeightWidth" alt="" />
+                                    @* } *@
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-default custom_btn custom_div_margin_top" type="button" data-toggle="modal" data-target="#myEditPicture">UploadPicture</button>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label>WorkExperience</label>
+                                    <textarea class="form-control" id="editWorkExperience"></textarea>
+
+                                    <label>SelfAssessment</label>
+                                    <textarea class="form-control" id="editSelfAssessment"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Attachment</label>
+                            </div>
+                            <div class="form-group">
+                                @*@if (!string.IsNullOrEmpty(Model.Attachment))
+                                {
+                                    @Html.ActionLink(@Model.Attachment, "OpenFile", new { attachment = Model.Attachment })
+                                }*@
+                            </div>
+                        </form>
+                        
+                        <div class="modal fade" id="myEditPicture" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+
+                                    <div class="modal-body">
+                                        @using (Html.BeginForm("UploadPicture", "Staff", FormMethod.Post, new { ID = "uploadPic", enctype = "multipart/form-data" }))
+                                        {
+
+                                            <label>UploadPicture</label>
+                                            <div>
+                                                <input type="hidden" value="" name="staffPicId" id="staffPicId" />
+                                                <input type="file" name="head" />
+                                                <input type="button" id="btnUploadPic" value="Upload" />
+                                            </div>
+                                        }
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <div>
+                                <button class="btn btn-default custom_btn" type="button" data-toggle="modal" data-target="#myEditAttachment">UploadAttachment</button>
+                            </div>
+
+                        </div>
+                        <div class="modal fade" id="myEditAttachment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+
+                                    <div class="modal-body">
+                                        @using (Html.BeginForm("UploadAttachment", "Staff", FormMethod.Post, new { ID = "uploadAtt", enctype = "multipart/form-data" }))
+                                        {
+
+                                            <label>UploadAttachment</label>
+                                            <div>
+                                                <input type="hidden" value="" name="staffAttId" id="staffAttId" />
+                                                <input type="file" name="head" />
+                                                <input type="button" id="btnUploadAtt" value="Upload" />
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="Edit" type="button" class="btn btn-default">Save</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
 </body>
 </html>

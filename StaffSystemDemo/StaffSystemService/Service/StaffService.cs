@@ -27,7 +27,10 @@ namespace StaffSystemService.Service
                 School = t.School,
                 Address = t.Address,
                 WorkExperience = t.WorkExperience,
-                Lock = t.Lock
+                SelfAssessment = t.SelfAssessment,
+                Lock = t.Lock,
+                Picture=t.Picture,
+                Attachment = t.Attachment
             }).ToList();
         }
 
@@ -78,10 +81,17 @@ namespace StaffSystemService.Service
             staff.WorkExperience = vmStaff.WorkExperience;
             staff.SelfAssessment = vmStaff.SelfAssessment;
             staff.Lock = vmStaff.Lock;
-            staff.Picture = vmStaff.Picture;
-            staff.Attachment = vmStaff.Attachment;
+            if (!string.IsNullOrEmpty(vmStaff.Picture))
+            {
+                staff.Picture = vmStaff.Picture;
+            }
+            if (!string.IsNullOrEmpty(vmStaff.Attachment))
+            {
+                staff.Attachment = vmStaff.Attachment;
+            }
             _staffRepository.Edit(staff);
         }
+
 
         public void Lock(int id, string state)
         {
@@ -91,9 +101,12 @@ namespace StaffSystemService.Service
             _staffRepository.Edit(staff);
         }
 
-        public List<IndexViewModel.Staff> Search(string name)
+        public List<IndexViewModel.Staff> Search(string parameter)
         {
-            var staffList = QueryAllStaffs().Where(t => t.Name!=null && t.Name.Contains(name)).ToList();
+
+            var staffList = QueryAllStaffs().Where(t => (t.Name != null && t.Name.Contains(parameter)) || (t.School != null && t.School.Contains(parameter)) ||
+                                                         (t.Address != null && t.Address.Contains(parameter)) || (t.WorkExperience != null && t.WorkExperience.Contains(parameter)) ||
+                                                         (t.SelfAssessment != null && t.SelfAssessment.Contains(parameter)) ||  t.Id.ToString().Contains(parameter)).ToList();
             return staffList;
         }
 
