@@ -16,150 +16,15 @@
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/CustomStyle.css" rel="stylesheet" />
+    <link href="~/Scripts/datepicker.css" rel="stylesheet" />
 
     <script src="~/Scripts/bootstrap.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/jquery-2.0.3.js"></script>
     <script src="~/Scripts/jquery-2.0.3.min.js"></script>
     <script src="~/Scripts/jquery.validate.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#StaffForm").validate();
-        });
+    <script src="~/Scripts/bootstrap-datepicker.js"></script>
 
-        $(function () {
-
-            $("#Add").click(function () {
-                if ($("#StaffForm").valid()) {
-                    var staff = {
-                        Name: $("#Name").val(),
-                        BirthDay: $("#BirthDay").val(),
-                        School: $("#School").val(),
-                        Address: $("#Address").val(),
-                        WorkExperience: $("#WorkExperience").val(),
-                        SelfAssessment: $("#SelfAssessment").val(),
-                    };
-
-                    $("#Add").attr("disabled", "disabled");
-
-                    $.ajax({
-                        url: "@Url.Action("AddStaff", "Staff")",
-                        type: "post",
-                        data: staff,
-                        success: function () {
-                            window.location.href = "@Url.Action("Index", "Staff")";
-                        },
-                        error: function () {
-                            window.location.href = "@Url.Action("Error", "Staff")";
-                        }
-                    });
-                }
-
-            });
-
-
-            $("#Search").click(function () {
-                var searchName = $("#SearchName").val();
-                location.href = "/Staff/Search?parameter=" + searchName;
-            });
-
-            $("#Edit").click(function () {
-                if ($("#editName").val() == "") { alert("Name is not empty!!"); return false; }
-                var staff = {
-                    Id: $("#editId").val(),
-                    Name: $("#editName").val(),
-                    BirthDay: $("#editBirthDay").val(),
-                    School: $("#editSchool").val(),
-                    Address: $("#editAddress").val(),
-                    WorkExperience: $("#editWorkExperience").val(),
-                    SelfAssessment: $("#editSelfAssessment").val(),
-                    Picture: $("#editPicture").val(),
-                    Attachment: $("#editAttachment").val(),
-                    Lock: $("#editLock").val()
-                };
-
-                $("#Edit").attr("disabled", "disabled");
-
-                $.ajax({
-                    url: "@Url.Action("Edit", "Staff")",
-                    type: "post",
-                data: staff,
-                success: function () {
-                    window.location.href = "@Url.Action("Index", "Staff")";
-                },
-                error: function () {
-                    window.location.href = "@Url.Action("Error", "Staff")";
-                }
-            });
-            
-        });
-
-        $("#btnUploadPic").click(function () {
-            $("#uploadPic").submit();
-            
-        });
-        
-        $("#btnUploadAtt").click(function () {
-            $("#uploadAtt").submit();
-        });
-        $("#GoToList").click(function() {
-            window.location.href ="@Url.Action("Index","Staff")";
-        });
-        });
-        
-
-        
-
-            
-        
-
-    </script>
-    <script type="text/javascript">
-
-        $("body").on("click", "#EditStaff", function () {
-            //var staffId = $(this).data('id');
-            //$("#Name").val(staffId);
-            //$(".modal-body #bookId").val(myBookId);
-            // As pointed out in comments,
-            // it is superfluous to have to manually call the modal.
-            //$("#myEditModal").modal("show");
-            var $this = $(this);
-            var id = $this.attr("data-id");
-            var selectTr = $("tr[data-id='" + id + "']");
-            var name = selectTr.children("td[data-member='Name']").text();
-            var birthDay = selectTr.children("td[data-member='BirthDay']").text();
-            var school = selectTr.children("td[data-member='School']").text();
-            var address = selectTr.children("td[data-member='Address']").text();
-            var workExperience = selectTr.children("td[data-member='WorkExperience']").text();
-            var selfAssessment = selectTr.children("td[data-member='SelfAssessment']").text();
-            var picture = selectTr.children("td[data-member='Picture']").text();
-            var attachment = selectTr.children("td[data-member='Attachment']").text();
-            var lock = selectTr.children("td[data-member='Lock']").text();
-            //var data = function(day) { throw new Error("Not implemented"); };
-            $("#editId").val(id);
-            $("#editName").val(name);
-            if (birthDay!="") {
-                $("#editBirthDay").val(new Date(birthDay));
-            }
-            
-            $("#editSchool").val(school);
-            $("#editAddress").val(address);
-            $("#editWorkExperience").val(workExperience);
-            $("#editSelfAssessment").val(selfAssessment);
-            //$("#editPicture").val(picture);
-            //$("#editAttachment").val(attachment);
-            $("#editLock").val(lock);
-            if (picture!="") {
-                $("#picScr").attr("src", "Images/StaffImage/" + picture);
-            } else {
-                $("#picScr").attr("src", "Images/nodata.jpg");
-            }
-            
-            $("#staffPicId").val(id);
-            $("#staffAttId").val(id);
-        });
-
-    </script>
 </head>
 
 <body>
@@ -219,16 +84,19 @@
                         <td>
                             @if (item.Lock)
                             {
-                                @Html.ActionLink("UnLock", "Lock", new { id = item.Id, state = "Unlock" })
-                                <a class="btn" href="#myEditModal" data-toggle="modal" data-id="@item.Id" id="EditStaff">Edit</a>
-                                @*<button class="btn btn-default custom_btn" type="button" data-toggle="modal" data-target="#myAddModal">Create New</button>
-                                    myEditModal*@
+                                @*@Html.ActionLink("UnLock", "Lock", new { id = item.Id, state = "Unlock" })*@
+                                
+                                <a class="btn" href="#" data-toggle="modal" data-id="@item.Id" id="unLockStaff">UnLock</a>
                             }
                             else
                             {
-                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) @("|")
-
-                                @Html.ActionLink("Lock", "Lock", new { id = item.Id, state = "Lock" })
+                                @*@Html.ActionLink("Edit", "Edit", new { id = item.Id })*@ 
+                                 @*@Html.ActionLink("Lock", "Lock", new { id = item.Id, state = "Lock" })*@
+                                
+                                <a class="btn" href="#myEditModal" data-toggle="modal" data-id="@item.Id" id="EditStaff">Edit</a>
+                                 
+                                <a class="btn" href="#" data-toggle="modal" data-id="@item.Id" id="lockStaff">Lock</a>
+                               
                             }
                         </td>
                         <td data-member="SelfAssessment" class="colhidden">@item.SelfAssessment</td>
@@ -263,7 +131,9 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="control-label">BirthDay</label>
-                                <input type="date" class="form-control" id="BirthDay" placeholder="Enter BirthDay">
+                                <input type="date" class="form-control" id="BirthDay" value="">
+                                @*<input type="text" class="datepicker" data-provide="datepicker" data-date-format="mm/dd/yyyy" id="BirthDay">*@
+                                @*<input type="text" class="form-control" id="BirthDay" placeholder="Enter School">*@
                             </div>
                         </div>
                         <div class="row">
@@ -308,7 +178,7 @@
                 </div>
                 <div class="modal-body">
                     <div id="StaffForm">
-                        <form >
+                        <form id="editStaff" method="POST" action="@Url.Action("Edit", "Staff")" enctype="multipart/form-data">
                             <input type="hidden" name="editId" id="editId" value="" />
                             <input type="hidden" name="editPicture" id="editPicture" value="" />
                             <input type="hidden" name="editAttachment" id="editAttachment" value="" />
@@ -316,99 +186,93 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label class="control-label">Name</label>
-                                    <input type="text" class="form-control required" id="editName" value="">
+                                    <input type="text" class="form-control required" id="editName" name="editName">
 
                                     <label class="control-label">BirthDay</label>
-                                    <input type="date" class="form-control" id="editBirthDay" value="">
+                                    <input type="date" class="form-control" id="editBirthDay" name="editBirthDay" value="">
 
                                     <label>School</label>
-                                    <input type="text" class="form-control" id="editSchool" value="">
+                                    <input type="text" class="form-control" id="editSchool" name="editSchool" value="">
 
                                     <label>Address</label>
-                                    <input type="text" class="form-control" id="editAddress" value="">
+                                    <input type="text" class="form-control" id="editAddress" name="editAddress" value="">
                                 </div>
                                 <div class="col-md-6">
-                                    
-                                    @*@if (string.IsNullOrEmpty(Model.Picture))
-                                        {
-                                            <img src="~/Images/nodata.jpg" class="imageHeightWidth" alt="" />
-                                        }
-                                        else
-                                        {*@
-                                    <img id="picScr" name="picScr" class="imageHeightWidth" alt="" />
-                                    @* } *@
+                                    <img id="picScr" class="imageHeightWidth" alt="" />
+                                    <input type="file" id="headPic" name="headPic" class="custom_div_margin_top" />
                                 </div>
-                                <div class="col-md-6">
-                                    <button class="btn btn-default custom_btn custom_div_margin_top" type="button" data-toggle="modal" data-target="#myEditPicture">UploadPicture</button>
+                                @*<div class="col-md-6">
+                                        <button class="btn btn-default custom_btn custom_div_margin_top" type="button" data-toggle="modal" data-target="#myEditPicture">UploadPicture</button>
 
-                                </div>
+                                    </div>*@
                             </div>
                             <div class="row">
                                 <div class="col-md-10">
                                     <label>WorkExperience</label>
-                                    <textarea class="form-control" id="editWorkExperience"></textarea>
+                                    <textarea class="form-control" id="editWorkExperience" name="editWorkExperience"></textarea>
 
                                     <label>SelfAssessment</label>
-                                    <textarea class="form-control" id="editSelfAssessment"></textarea>
+                                    <textarea class="form-control" id="editSelfAssessment" name="editSelfAssessment"></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>Attachment</label>
                             </div>
-                            <div class="form-group">
-                                @*@if (!string.IsNullOrEmpty(Model.Attachment))
-                                {
-                                    @Html.ActionLink(@Model.Attachment, "OpenFile", new { attachment = Model.Attachment })
-                                }*@
+                            <div id="showAtt" class="form-group">
+                                @*dynamically add links by jquery*@
+                                <input type="file" id="headAtt" name="headAtt" class="custom_div_margin_top" />
                             </div>
+                            @*<button id="eidtSave" type="submit" class="btn btn-default">Save</button>*@
                         </form>
-                        
-                        <div class="modal fade" id="myEditPicture" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
 
-                                    <div class="modal-body">
-                                        @using (Html.BeginForm("UploadPicture", "Staff", FormMethod.Post, new { ID = "uploadPic", enctype = "multipart/form-data" }))
-                                        {
+                        @*<div class="modal fade" id="myEditPicture" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">upload picture</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            @using (Html.BeginForm("UploadPicture", "Staff", FormMethod.Post, new { ID = "uploadPic", enctype = "multipart/form-data" }))
+                                            {
 
-                                            <label>UploadPicture</label>
-                                            <div>
-                                                <input type="hidden" value="" name="staffPicId" id="staffPicId" />
-                                                <input type="file" name="head" />
-                                                <input type="button" id="btnUploadPic" value="Upload" />
-                                            </div>
-                                        }
-                                    </div>
+                                                <label>UploadPicture</label>
+                                                <div>
+                                                    <input type="hidden" value="" name="staffPicId" id="staffPicId" />
+                                                    <input type="file" name="head" />
+                                                    <input type="button" id="btnUploadPic" value="Upload" />
+                                                </div>
+                                            }
+                                        </div>
 
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-
-                            <div>
-                                <button class="btn btn-default custom_btn" type="button" data-toggle="modal" data-target="#myEditAttachment">UploadAttachment</button>
-                            </div>
-
-                        </div>
-                        <div class="modal fade" id="myEditAttachment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-
-                                    <div class="modal-body">
-                                        @using (Html.BeginForm("UploadAttachment", "Staff", FormMethod.Post, new { ID = "uploadAtt", enctype = "multipart/form-data" }))
-                                        {
-
-                                            <label>UploadAttachment</label>
-                                            <div>
-                                                <input type="hidden" value="" name="staffAttId" id="staffAttId" />
-                                                <input type="file" name="head" />
-                                                <input type="button" id="btnUploadAtt" value="Upload" />
-                                            </div>
-                                        }
                                     </div>
                                 </div>
+                            </div>*@
+                        @*<div class="form-group">
+
+                                <div>
+                                    <button class="btn btn-default custom_btn" type="button" data-toggle="modal" data-target="#myEditAttachment">UploadAttachment</button>
+                                </div>
+
                             </div>
-                        </div>
+                            <div class="modal fade" id="myEditAttachment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+
+                                        <div class="modal-body">
+                                            @using (Html.BeginForm("UploadAttachment", "Staff", FormMethod.Post, new { ID = "uploadAtt", enctype = "multipart/form-data" }))
+                                            {
+
+                                                <label>UploadAttachment</label>
+                                                <div>
+                                                    <input type="hidden" value="" name="staffAttId" id="staffAttId" />
+                                                    <input type="file" name="head" />
+                                                    <input type="button" id="btnUploadAtt" value="Upload" />
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
 
                     </div>
                 </div>
@@ -425,3 +289,169 @@
 
 </body>
 </html>
+@*<script src="~/Scripts/customScripts/staffIndex.js"></script>*@
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        $("#StaffForm").validate();
+
+    });
+
+    $(function () {
+
+        $("#Add").click(function () {
+            if ($("#StaffForm").valid()) {
+                var staff = {
+                    Name: $("#Name").val(),
+                    BirthDay: $("#BirthDay").val(),
+                    School: $("#School").val(),
+                    Address: $("#Address").val(),
+                    WorkExperience: $("#WorkExperience").val(),
+                    SelfAssessment: $("#SelfAssessment").val(),
+                };
+
+                $("#Add").attr("disabled", "disabled");
+
+                $.ajax({
+                    url: "@Url.Action("AddStaff", "Staff")",
+                    //url: "Staff/AddStaff",
+                    type: "post",
+                    data: staff,
+                    success: function () {
+                        window.location.href = "@Url.Action("Index", "Staff")";
+                        //window.location.href = "Staff/Index";
+                    },
+                    error: function () {
+                        window.location.href = "@Url.Action("Error", "Staff")";
+                        //window.location.href = "Staff/Error";
+                    }
+                });
+            }
+
+        });
+
+
+        $("#Search").click(function () {
+            var searchName = $("#SearchName").val();
+            location.href = "/Staff/Search?parameter=" + searchName;
+        });
+
+        @*$("#Edit").click(function () {
+            if ($("#editName").val() == "") { alert("Name is not empty!!"); return false; }
+            var staff = {
+                Id: $("#editId").val(),
+                Name: $("#editName").val(),
+                BirthDay: $("#editBirthDay").val(),
+                School: $("#editSchool").val(),
+                Address: $("#editAddress").val(),
+                WorkExperience: $("#editWorkExperience").val(),
+                SelfAssessment: $("#editSelfAssessment").val(),
+                Picture: $("#editPicture").val(),
+                Attachment: $("#editAttachment").val(),
+                Lock: $("#editLock").val()
+            };
+
+            $("#Edit").attr("disabled", "disabled");
+
+            $.ajax({
+                url: "@Url.Action("Edit", "Staff")",
+                //url: "Staff/AddStaff",
+                type: "post",
+                data: staff,
+                success: function () {
+                    window.location.href = "@Url.Action("Index", "Staff")";
+                    //window.location.href = "Staff/Index";
+                },
+                error: function () {
+                    window.location.href = "@Url.Action("Error", "Staff")";
+                    //window.location.href = "Staff/Error";
+                }
+            });
+
+        });*@
+
+        $("#Edit").click(function () {
+            $("#editStaff").submit();
+
+        });
+
+        $("#btnUploadPic").click(function () {
+            $("#uploadPic").submit();
+
+        });
+
+        $("#btnUploadAtt").click(function () {
+            $("#uploadAtt").submit();
+        });
+        $("#GoToList").click(function () {
+            window.location.href = "@Url.Action("Index","Staff")";
+            //window.location.href = "Staff/Index";
+        });
+    });
+
+
+
+
+    $("body").on("click", "#EditStaff", function () {
+
+        var $this = $(this);
+        var id = $this.attr("data-id");
+        var selectTr = $("tr[data-id='" + id + "']");
+        var name = selectTr.children("td[data-member='Name']").text();
+        var birthDay = selectTr.children("td[data-member='BirthDay']").text();
+        var school = selectTr.children("td[data-member='School']").text();
+        var address = selectTr.children("td[data-member='Address']").text();
+        var workExperience = selectTr.children("td[data-member='WorkExperience']").text();
+        var selfAssessment = selectTr.children("td[data-member='SelfAssessment']").text();
+        var picture = selectTr.children("td[data-member='Picture']").text();
+        var attachment = selectTr.children("td[data-member='Attachment']").text();
+        var lock = selectTr.children("td[data-member='Lock']").text();
+        //var data = function(day) { throw new Error("Not implemented"); };
+        $("#editId").val(id);
+        $("#editName").val(name);
+
+        if (birthDay != "") {
+            $("#editBirthDay").val(birthDay);
+        }
+
+        $("#editSchool").val(school);
+        $("#editAddress").val(address);
+        $("#editWorkExperience").val(workExperience);
+        $("#editSelfAssessment").val(selfAssessment);
+        //$("#editPicture").val(picture);
+        //$("#editAttachment").val(attachment);
+        $("#editLock").val(lock);
+        if (picture != "") {
+            $("#picScr").attr("src", "Images/StaffImage/" + picture);
+        } else {
+            $("#picScr").attr("src", "Images/nodata.jpg");
+        }
+
+        if (attachment != "") {
+
+            $("#showAtt").after("<a href='Doc/" + attachment + "'>" + attachment + "</a>");
+
+        }
+
+        $("#staffPicId").val(id);
+        $("#staffAttId").val(id);
+
+
+
+    });
+
+    $("body").on("click", "#lockStaff", function () {
+        var $this = $(this);
+        var staffId = $this.attr("data-id");
+        window.location.href = "Staff/Lock?id=" + staffId;
+    });
+    
+    $("body").on("click", "#unLockStaff", function () {
+        var $this = $(this);
+        var staffId = $this.attr("data-id");
+        window.location.href = "Staff/Lock?id=" + staffId;
+    });
+    
+
+</script>

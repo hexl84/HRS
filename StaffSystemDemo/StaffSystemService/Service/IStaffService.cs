@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Web;
 using StaffSystemViewModel;
 
 namespace StaffSystemService.Service
@@ -9,7 +10,8 @@ namespace StaffSystemService.Service
         void Add(IndexViewModel.Staff vmStaff);
         IndexViewModel.Staff FindInfo(int id);
         void Edit(IndexViewModel.Staff staff);
-        void Lock(int id, string state);
+        void Edit(StaffEditModel staff, HttpPostedFileBase headPic, HttpPostedFileBase headAtt);
+        void Lock(int id);
         List<IndexViewModel.Staff> Search(string name);
     }
 }

@@ -105,6 +105,7 @@
             @if (!string.IsNullOrEmpty(Model.Attachment))
             {
                 @Html.ActionLink("OpenFile", "OpenFile", new { attachment = Model.Attachment })
+                @*<a href="~/Doc/@Html.ValueFor(model=>model.Attachment)">@Html.DisplayFor(model => model.Attachment)</a>*@
             }
            
         </div>

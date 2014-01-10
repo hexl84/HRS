@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Web;
 using Repository.Repository;
 using StaffSystemData.DataModel;
 using StaffSystemViewModel;
@@ -92,12 +94,75 @@ namespace StaffSystemService.Service
             _staffRepository.Edit(staff);
         }
 
+        private void UploadPicture(HttpPostedFileBase head, int staffPicId)
+        {
 
-        public void Lock(int id, string state)
+            //if (head == null)
+            //{
+            //    return View("Error");
+            //}
+
+            //var staff = _staffService.FindInfo(staffPicId);
+
+            //var supportedTypes = new[] { ".jpg", ".jpeg", ".png", ".bmp" };
+            //var extension = Path.GetExtension(head.FileName);
+            //if (!supportedTypes.Contains(extension) || head.ContentLength > 1024 * 1000 * 3)
+            //{
+            //    return View("Error");
+            //}
+
+            //var filename = staffPicId + extension;
+            //var filepath = Path.Combine(Server.MapPath("~/Images/StaffImage"), filename);
+            //head.SaveAs(filepath);
+
+            //staff.Picture = filename;
+            //_staffService.Edit(staff);
+            //return RedirectToAction("Edit", new { id = staff.Id });
+        }
+
+        public void Edit(StaffEditModel editStaff, HttpPostedFileBase headPic, HttpPostedFileBase headAtt)
+        {
+            var staff = _staffRepository.FindInfo(editStaff.editId);
+            staff.Id = editStaff.editId;
+            staff.Name = editStaff.editName;
+            staff.BirthDay = editStaff.editBirthDay;
+            staff.School = editStaff.editSchool;
+            staff.Address = editStaff.editAddress;
+            staff.WorkExperience = editStaff.editWorkExperience;
+            staff.SelfAssessment = editStaff.editSelfAssessment;
+            staff.Lock = editStaff.editLock;
+            //if (!string.IsNullOrEmpty(editStaff.editPicture))
+            //{
+            //    staff.Picture = editStaff.editPicture;
+            //}
+            //if (!string.IsNullOrEmpty(editStaff.editAttachment))
+            //{
+            //    staff.Attachment = editStaff.editAttachment;
+            //}
+            if (headPic != null)
+            {
+                
+                var extension = Path.GetExtension(headPic.FileName);
+                var filename = editStaff.editId + extension;
+                var filepath = Path.Combine(HttpContext.Current.Server.MapPath("~/Images/StaffImage"), filename);
+                headPic.SaveAs(filepath);
+                staff.Picture = filename;
+            }
+            if (headAtt != null)
+            {
+                var filepath = Path.Combine(HttpContext.Current.Server.MapPath("~/Doc"), headAtt.FileName);
+                headAtt.SaveAs(filepath);
+                staff.Attachment = headAtt.FileName;
+            }
+            _staffRepository.Edit(staff);
+        }
+
+
+        public void Lock(int id)
         {
 
             var staff = _staffRepository.FindInfo(id);
-            staff.Lock = state == "Lock";
+            staff.Lock = staff.Lock != true;
             _staffRepository.Edit(staff);
         }
 
