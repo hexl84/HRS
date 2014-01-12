@@ -165,21 +165,21 @@ namespace StaffSystemDemoTest.StaffUnitTest
         public void Test_Lock()
         {
             //Arrange
-            //const string state = "Lock";
-            //const int id = 1;
+           
+            const int id = 1;
 
-            //var staffServiceMock = new Mock<IStaffService>();
-            //var staffServiceObject = staffServiceMock.Object;
-            //var controller = new StaffController(staffServiceObject);
+            var staffServiceMock = new Mock<IStaffService>();
+            var staffServiceObject = staffServiceMock.Object;
+            var controller = new StaffController(staffServiceObject);
 
-            //int count = 0;
-            //staffServiceMock.Setup(x => x.Lock(id,state)).Callback(() => count++);
+            int count = 0;
+            staffServiceMock.Setup(x => x.Lock(id)).Callback(() => count++);
 
-            ////Act
-            //controller.Lock(state, id);
+            //Act
+            controller.Lock(id);
 
-            ////Assert
-            //count.Should().Be(1);
+            //Assert
+            count.Should().Be(1);
 
         }
 
@@ -187,21 +187,20 @@ namespace StaffSystemDemoTest.StaffUnitTest
         public void Test_UnLock()
         {
             //Arrange
-            //const string state = "UnLock";
-            //const int id = 1;
+            const int id = 1;
 
-            //var staffServiceMock = new Mock<IStaffService>();
-            //var staffServiceObject = staffServiceMock.Object;
-            //var controller = new StaffController(staffServiceObject);
+            var staffServiceMock = new Mock<IStaffService>();
+            var staffServiceObject = staffServiceMock.Object;
+            var controller = new StaffController(staffServiceObject);
 
-            //int count = 0;
-            //staffServiceMock.Setup(x => x.Lock(id, state)).Callback(() => count++);
+            int count = 0;
+            staffServiceMock.Setup(x => x.Lock(id)).Callback(() => count++);
 
-            ////Act
-            //controller.Lock(state, id);
+            //Act
+            controller.Lock(id);
 
-            ////Assert
-            //count.Should().Be(1);
+            //Assert
+            count.Should().Be(1);
 
         }
 

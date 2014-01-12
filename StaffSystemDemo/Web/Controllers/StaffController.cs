@@ -66,15 +66,6 @@ namespace StaffSystemDemo.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        //[HttpPost]
-        //public ActionResult Edit()
-        //{
-        //    //_staffService.Edit(vmStaff);
-        //    //return RedirectToAction("Index");
-        //    return null;
-        //}
-
-
         public ActionResult Lock(int id = 0)
         {
             _staffService.Lock(id);
@@ -119,7 +110,7 @@ namespace StaffSystemDemo.Web.Controllers
         //    return RedirectToAction("Edit", new { id = staff.Id });
         //}
 
-        
+
 
         [HttpPost]
         public ActionResult UploadAttachment(HttpPostedFileBase head, int staffAttId)
