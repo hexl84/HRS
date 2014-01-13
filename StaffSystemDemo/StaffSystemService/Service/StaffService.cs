@@ -94,32 +94,6 @@ namespace StaffSystemService.Service
             _staffRepository.Edit(staff);
         }
 
-        private void UploadPicture(HttpPostedFileBase head, int staffPicId)
-        {
-
-            //if (head == null)
-            //{
-            //    return View("Error");
-            //}
-
-            //var staff = _staffService.FindInfo(staffPicId);
-
-            //var supportedTypes = new[] { ".jpg", ".jpeg", ".png", ".bmp" };
-            //var extension = Path.GetExtension(head.FileName);
-            //if (!supportedTypes.Contains(extension) || head.ContentLength > 1024 * 1000 * 3)
-            //{
-            //    return View("Error");
-            //}
-
-            //var filename = staffPicId + extension;
-            //var filepath = Path.Combine(Server.MapPath("~/Images/StaffImage"), filename);
-            //head.SaveAs(filepath);
-
-            //staff.Picture = filename;
-            //_staffService.Edit(staff);
-            //return RedirectToAction("Edit", new { id = staff.Id });
-        }
-
         public void Edit(StaffEditModel editStaff, HttpPostedFileBase headPic, HttpPostedFileBase headAtt)
         {
             var staff = _staffRepository.FindInfo(editStaff.editId);
@@ -131,14 +105,7 @@ namespace StaffSystemService.Service
             staff.WorkExperience = editStaff.editWorkExperience;
             staff.SelfAssessment = editStaff.editSelfAssessment;
             staff.Lock = editStaff.editLock;
-            //if (!string.IsNullOrEmpty(editStaff.editPicture))
-            //{
-            //    staff.Picture = editStaff.editPicture;
-            //}
-            //if (!string.IsNullOrEmpty(editStaff.editAttachment))
-            //{
-            //    staff.Attachment = editStaff.editAttachment;
-            //}
+           
             if (headPic != null)
             {
                 

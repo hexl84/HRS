@@ -138,23 +138,24 @@ namespace StaffSystemDemoTest.StaffUnitTest
         public void Test_Edit_By_Staff()
         {
             //Arrange
-            var vmStaff = new IndexViewModel.Staff();
-            vmStaff.Id = -1;
-            vmStaff.Name = "yg";
-            vmStaff.BirthDay = DateTime.Parse("2014-01-02");
-            vmStaff.School = "School";
-            vmStaff.Address = "Address";
-            vmStaff.WorkExperience = "WorkExperience";
+
+            var vmStaff = new StaffEditModel();
+            vmStaff.editId = -1;
+            vmStaff.editName = "yg";
+            vmStaff.editBirthDay = DateTime.Parse("2014-01-02");
+            vmStaff.editSchool = "School";
+            vmStaff.editAddress = "Address";
+            vmStaff.editWorkExperience = "WorkExperience";
 
             var staffServiceMock = new Mock<IStaffService>();
             var staffServiceObject = staffServiceMock.Object;
             var controller = new StaffController(staffServiceObject);
 
             int count = 0;
-            staffServiceMock.Setup(x => x.Edit(vmStaff)).Callback(()=>count++);
+            staffServiceMock.Setup(x => x.Edit(vmStaff,null,null)).Callback(()=>count++);
             
             //Act
-           //controller.Edit(vmStaff);
+            controller.Edit(vmStaff, null, null);
 
             //Assert
             count.Should().Be(1);
@@ -234,241 +235,7 @@ namespace StaffSystemDemoTest.StaffUnitTest
                 indexViewModel.StaffList.Count.Should().Be(1);
         }
 
-        //if file is empty
-        [Test]
-        public void Test_UploadPicture_When_EmptyFile()
-        {
-            //Arrange
-            //const int staffId = 1;
-            
-            //var staffServiceMock = new Mock<IStaffService>();
-            //var staffServiceObject = staffServiceMock.Object;
-            //var controller = new StaffController(staffServiceObject);
-
-            //var httpPostedFileBase = new Mock<HttpPostedFileBase>();
-
-            //var file = httpPostedFileBase.Object;
-            //file = null;
-            ////Act
-            //var result = controller.UploadPicture(file, staffId);
-
-            ////Assert
-            //var viewResult = (ViewResult)result;
-            //viewResult.ViewName.Should().Be("Error");
-        }
-
-
-        [Test]
-        public void Test_UploadPicture_ByFileType()
-        {
-            ////Arrange
-            //const int staffId = 1;
-            
-            //var staffServiceMock = new Mock<IStaffService>();
-            //var controller = new StaffController(staffServiceMock.Object);
-
-            //var httpPostedFileBaseMock = new Mock<HttpPostedFileBase>();
-            //httpPostedFileBaseMock.Setup(h => h.FileName).Returns(".gif");
-            //var file = httpPostedFileBaseMock.Object;
-
-            ////Act
-            //var result = controller.UploadPicture(file, staffId);
-
-            ////Assert  
-            //var viewResult = (ViewResult)result;
-            //viewResult.ViewName.Should().Be("Error");
-        }
-
-        [Test]
-        public void Test_UploadPicture_ByFileTypeAndLength()
-        {
-            ////Arrange
-            //const int staffId = 1;
-            
-            //var staffServiceMock = new Mock<IStaffService>();
-            //var controller = new StaffController(staffServiceMock.Object);
-
-            //var httpPostedFileBaseMock = new Mock<HttpPostedFileBase>();
-            //httpPostedFileBaseMock.Setup(h => h.FileName).Returns(".png");
-            //httpPostedFileBaseMock.Setup(h => h.ContentLength).Returns(30720001);
-            //var file = httpPostedFileBaseMock.Object;
-
-            ////Act
-            //var result = controller.UploadPicture(file, staffId);
-
-            ////Assert  
-            //var viewResult = (ViewResult)result;
-            //viewResult.ViewName.Should().Be("Error");
-        }
-
-        [Test]
-        public void Test_UploadPicture_When_Success()
-        {
-            //Arrange
-            //const int staffId = 2;
-            
-            //var httpContextMock = new Mock<HttpContextBase>();
-            //var httpServerMock = new Mock<HttpServerUtilityBase>();
-            //httpServerMock.Setup(x => x.MapPath("~/Images/StaffImage")).Returns(@"D:\work\HRS\StaffSystemDemo\Web\Images\StaffImage");
-            //httpContextMock.Setup(x => x.Server).Returns(httpServerMock.Object);
-
-            //var staffServiceMock = new Mock<IStaffService>();
-            //var controller = new StaffController(staffServiceMock.Object);
-            //controller.ControllerContext = new ControllerContext(httpContextMock.Object, new RouteData(), controller);
-
-            //staffServiceMock.Setup(x => x.FindInfo(staffId)).Returns(new IndexViewModel.Staff()
-            //{
-            //    Id = staffId,
-            //    Name = "yg",
-            //    Address = "Address",
-
-            //});
-
-            //var httpPostedFileBaseMock = new Mock<HttpPostedFileBase>();
-            //httpPostedFileBaseMock.Setup(h => h.FileName).Returns(".jpeg");
-            //var file = httpPostedFileBaseMock.Object;
-
-            ////Act
-            //var result = controller.UploadPicture(file, staffId);
-            //var redirectToRouteResult = (RedirectToRouteResult)result;
-            
-
-            ////Assert
-            //redirectToRouteResult.RouteValues["action"].Should().Be("Edit");
-            //redirectToRouteResult.RouteValues["id"].Should().Be(staffId);
-
-
-
-            ////Act
-            //var result = controller.UploadPicture(file, staffId);
-            //var viewResult = (ViewResult)result;
-            //var indexViewModelStaff = viewResult.Model as IndexViewModel.Staff;
-
-            ////Assert
-
-            //indexViewModelStaff.Should().NotBeNull();
-            //viewResult.Model.Should().BeOfType<IndexViewModel.Staff>();
-            //indexViewModelStaff.Picture.Should().Be("2.jpeg");
-            //viewResult.ViewName.Should().Be("Edit");
-
-            //httpPostedFileBaseMock.Verify(x => x.SaveAs(@"D:\work\HRS\StaffSystemDemo\Web\Images\StaffImage\2.jpeg"));
-        }
-
-        //if file is empty
-        [Test]
-        public void Test_UploadAttachment_When_EmptyFile()
-        {
-            //Arrange
-            const int staffId = 1;
-
-            var staffServiceMock = new Mock<IStaffService>();
-            var staffServiceObject = staffServiceMock.Object;
-            var controller = new StaffController(staffServiceObject);
-
-            var httpPostedFileBase = new Mock<HttpPostedFileBase>();
-
-            var file = httpPostedFileBase.Object;
-            file = null;
-            //Act
-            var result = controller.UploadAttachment(file, staffId);
-
-            //Assert
-            var viewResult = (ViewResult)result;
-            viewResult.ViewName.Should().Be("Error");
-        }
-
-
-        [Test]
-        public void Test_UploadAttachment_ByFileType()
-        {
-            //Arrange
-            const int staffId = 1;
-
-            var staffServiceMock = new Mock<IStaffService>();
-            var controller = new StaffController(staffServiceMock.Object);
-
-            var httpPostedFileBaseMock = new Mock<HttpPostedFileBase>();
-            httpPostedFileBaseMock.Setup(h => h.FileName).Returns(".docxx");
-            var file = httpPostedFileBaseMock.Object;
-
-            //Act
-            var result = controller.UploadAttachment(file, staffId);
-
-            //Assert  
-            var viewResult = (ViewResult)result;
-            viewResult.ViewName.Should().Be("Error");
-        }
-
-        [Test]
-        public void Test_UploadAttachment_ByFileTypeAndLength()
-        {
-            //Arrange
-            const int staffId = 1;
-
-            var staffServiceMock = new Mock<IStaffService>();
-            var controller = new StaffController(staffServiceMock.Object);
-
-            var httpPostedFileBaseMock = new Mock<HttpPostedFileBase>();
-            httpPostedFileBaseMock.Setup(h => h.FileName).Returns(".doc");
-            httpPostedFileBaseMock.Setup(h => h.ContentLength).Returns(102400001);
-            var file = httpPostedFileBaseMock.Object;
-
-            //Act
-            var result = controller.UploadAttachment(file, staffId);
-
-            //Assert  
-            var viewResult = (ViewResult)result;
-            viewResult.ViewName.Should().Be("Error");
-        }
-
-        [Test]
-        public void Test_UploadAttachment_When_Success()
-        {
-            //Arrange
-            const int staffId = 2;
-
-            var httpContextMock = new Mock<HttpContextBase>();
-            var httpServerMock = new Mock<HttpServerUtilityBase>();
-            httpServerMock.Setup(x => x.MapPath("~/Doc")).Returns(@"D:\work\HRS\StaffSystemDemo\Web\Doc");
-            httpContextMock.Setup(x => x.Server).Returns(httpServerMock.Object);
-
-            var staffServiceMock = new Mock<IStaffService>();
-            var controller = new StaffController(staffServiceMock.Object);
-            controller.ControllerContext = new ControllerContext(httpContextMock.Object, new RouteData(), controller);
-
-            staffServiceMock.Setup(x => x.FindInfo(staffId)).Returns(new IndexViewModel.Staff()
-            {
-                Id = staffId,
-                Name = "yg",
-                Address = "Address",
-            });
-
-            var httpPostedFileBaseMock = new Mock<HttpPostedFileBase>();
-            httpPostedFileBaseMock.Setup(h => h.FileName).Returns(".doc");
-            var file = httpPostedFileBaseMock.Object;
-
-            //Act
-            var result = controller.UploadAttachment(file, staffId);
-            var redirectToRouteResult = (RedirectToRouteResult)result;
-
-
-            //Assert
-            redirectToRouteResult.RouteValues["action"].Should().Be("Edit");
-            redirectToRouteResult.RouteValues["id"].Should().Be(staffId);
-
-            ////Act
-            //var result = controller.UploadAttachment(file, staffId);
-            //var viewResult = (ViewResult)result;
-            //var indexViewModelStaff = viewResult.Model as IndexViewModel.Staff;
-
-            ////Assert
-            //indexViewModelStaff.Should().NotBeNull();
-            //viewResult.Model.Should().BeOfType<IndexViewModel.Staff>();
-            //indexViewModelStaff.Attachment.Should().Be("yg.doc");
-            //viewResult.ViewName.Should().Be("Edit");
-
-            //httpPostedFileBaseMock.Verify(x => x.SaveAs(@"D:\work\HRS\StaffSystemDemo\Web\Doc\yg.doc"));
-        }
+       
 
         [Test]
         public void Test_OpenFile_When_Success()

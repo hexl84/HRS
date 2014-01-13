@@ -11,10 +11,6 @@
 
     <title>add Bootstrap</title>
 
-
-    @*<link href="~/Scripts/datepicker.css" rel="stylesheet" />*@
-
-
     <script src="~/Scripts/jquery-2.0.3.js"></script>
     <script src="~/Scripts/jquery-2.0.3.min.js"></script>
     <script src="~/Scripts/jquery.validate.js"></script>
@@ -23,7 +19,6 @@
     <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
     <link href="~/Content/CustomStyle.css" rel="stylesheet" />
-    @*<script src="~/Scripts/bootstrap-datepicker.js"></script>*@
 
 </head>
 
@@ -85,16 +80,16 @@
                         <td>
                             @if (item.Lock)
                             {
-                               
-                                <a class="btn" href="#myViewModal" data-toggle="modal" data-id="@item.Id" id="viewStaffInfo">View</a>
-                                <a class="btn" href="#" data-toggle="modal" data-id="@item.Id" id="unLockStaff">UnLock</a>
+
+                                <a class="btn action-button btn-default" href="#myViewModal" data-toggle="modal" data-id="@item.Id" id="viewStaffInfo">View</a>
+                                <a class="btn action-button btn-default" href="#" data-toggle="modal" data-id="@item.Id" id="unLockStaff">UnLock</a>
 
 
                             }
                             else
                             {
-                                <a class="btn" href="javascript:void(0)" data-toggle="modal" data-id="@item.Id" id="EditStaff">Edit</a>
-                                <a class="btn" href="#" data-toggle="modal" data-id="@item.Id" id="lockStaff">Lock</a>
+                                <a class="btn action-button btn-default" href="javascript:void(0)" data-toggle="modal" data-id="@item.Id" id="EditStaff">Edit</a>
+                                <a class="btn action-button btn-default " href="#" data-toggle="modal" data-id="@item.Id" id="lockStaff">Lock</a>
                             }
                         </td>
                         <td data-member="SelfAssessment" class="colhidden">@item.SelfAssessment</td>
@@ -197,7 +192,7 @@
                                     <img id="picScr" class="imageHeightWidth" alt="" />
                                     <input type="file" id="headPic" name="headPic" class="custom_div_margin_top" />
                                 </div>
-                              
+
                             </div>
                             <div class="row">
                                 <div class="col-md-10">
@@ -213,13 +208,13 @@
                             </div>
                             <div id="showAtt" class="form-group">
                                 @*dynamically add links by jquery*@
-                                
+
                             </div>
-                            <div  class="form-group">
-                               
+                            <div class="form-group">
+
                                 <input type="file" id="headAtt" name="headAtt" class="custom_div_margin_top" />
                             </div>
-                           
+
                         </form>
 
                     </div>
@@ -352,12 +347,8 @@
         });
         $("#GoToList").click(function () {
             window.location.href = "@Url.Action("Index","Staff")";
-            //window.location.href = "Staff/Index";
         });
     });
-
-
-
 
     $("body").on("click", "#EditStaff", function () {
 
@@ -385,17 +376,16 @@
         $("#editAddress").val(address);
         $("#editWorkExperience").val(workExperience);
         $("#editSelfAssessment").val(selfAssessment);
-        //$("#editPicture").val(picture);
-        //$("#editAttachment").val(attachment);
         $("#editLock").val(lock);
         if (picture != "") {
-            $("#picScr").attr("src", "Images/StaffImage/" + picture);
+            
+            $("#picScr").attr("src", "@(Url.Content("~/Images/StaffImage/"))" + picture);
         } else {
-            $("#picScr").attr("src", "Images/nodata.jpg");
+            $("#picScr").attr("src", "@(Url.Content("~/Images/nodata.jpg"))");
         }
 
         if (attachment != "") {
-            
+
             $("#showAtt").html("<a href='Doc/" + attachment + "'>" + attachment + "</a>");
         } else {
             $("#showAtt").html("");
@@ -404,55 +394,55 @@
         $("#myEditModal").modal("show");
     });
 
-    $("body").on("click", "#lockStaff", function () {
-        var $this = $(this);
-        var staffId = $this.attr("data-id");
-        window.location.href = "Staff/Lock?id=" + staffId;
-    });
+            $("body").on("click", "#lockStaff", function () {
+                var $this = $(this);
+                var staffId = $this.attr("data-id");
+                window.location.href = "Staff/Lock?id=" + staffId;
+            });
 
-    $("body").on("click", "#unLockStaff", function () {
-        var $this = $(this);
-        var staffId = $this.attr("data-id");
-        window.location.href = "Staff/Lock?id=" + staffId;
-    });
+            $("body").on("click", "#unLockStaff", function () {
+                var $this = $(this);
+                var staffId = $this.attr("data-id");
+                window.location.href = "Staff/Lock?id=" + staffId;
+            });
 
-    $("body").on("click", "#viewStaffInfo", function () {
+            $("body").on("click", "#viewStaffInfo", function () {
 
-        var $this = $(this);
-        var id = $this.attr("data-id");
-        var selectTr = $("tr[data-id='" + id + "']");
-        var name = selectTr.children("td[data-member='Name']").text();
-        var birthDay = selectTr.children("td[data-member='BirthDay']").text();
-        var school = selectTr.children("td[data-member='School']").text();
-        var address = selectTr.children("td[data-member='Address']").text();
-        var workExperience = selectTr.children("td[data-member='WorkExperience']").text();
-        var selfAssessment = selectTr.children("td[data-member='SelfAssessment']").text();
-        var picture = selectTr.children("td[data-member='Picture']").text();
-        var attachment = selectTr.children("td[data-member='Attachment']").text();
+                var $this = $(this);
+                var id = $this.attr("data-id");
+                var selectTr = $("tr[data-id='" + id + "']");
+                var name = selectTr.children("td[data-member='Name']").text();
+                var birthDay = selectTr.children("td[data-member='BirthDay']").text();
+                var school = selectTr.children("td[data-member='School']").text();
+                var address = selectTr.children("td[data-member='Address']").text();
+                var workExperience = selectTr.children("td[data-member='WorkExperience']").text();
+                var selfAssessment = selectTr.children("td[data-member='SelfAssessment']").text();
+                var picture = selectTr.children("td[data-member='Picture']").text();
+                var attachment = selectTr.children("td[data-member='Attachment']").text();
 
-        $("#viewName").val(name);
-        if (birthDay != "") {
-            $("#viewBirthDay").val($.trim(birthDay));
-        }
-        $("#viewSchool").val(school);
-        $("#viewAddress").val(address);
-        $("#viewWorkExperience").val(workExperience);
-        $("#viewSelfAssessment").val(selfAssessment);
-        if (picture != "") {
-            $("#viewPicScr").attr("src", "Images/StaffImage/" + picture);
-        } else {
-            $("#viewPicScr").attr("src", "Images/nodata.jpg");
-        }
-       
-        if (attachment != "") {
-            $("#viewShowAtt").html("<a href='Doc/" + attachment + "'>" + attachment + "</a>");
-        } else {
-            $("#viewShowAtt").html("");
-        }
-    });
+                $("#viewName").val(name);
+                if (birthDay != "") {
+                    $("#viewBirthDay").val($.trim(birthDay));
+                }
+                $("#viewSchool").val(school);
+                $("#viewAddress").val(address);
+                $("#viewWorkExperience").val(workExperience);
+                $("#viewSelfAssessment").val(selfAssessment);
+                if (picture != "") {
+                    $("#viewPicScr").attr("src", "@(Url.Content("~/Images/StaffImage/"))" + picture);
+                } else {
+                    $("#viewPicScr").attr("src", "@(Url.Content("~/Images/nodata.jpg"))");
+                }
 
-    $("#BirthDay").focus(function () {
-        $(this).datepicker({});
-    });
+                if (attachment != "") {
+                    $("#viewShowAtt").html("<a href='Doc/" + attachment + "'>" + attachment + "</a>");
+                } else {
+                    $("#viewShowAtt").html("");
+                }
+            });
+
+            $("#BirthDay").focus(function () {
+                $(this).datepicker({});
+            });
 
 </script>
