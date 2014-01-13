@@ -96,21 +96,21 @@ namespace StaffSystemService.Service
 
         public void Edit(StaffEditModel editStaff, HttpPostedFileBase headPic, HttpPostedFileBase headAtt)
         {
-            var staff = _staffRepository.FindInfo(editStaff.editId);
-            staff.Id = editStaff.editId;
-            staff.Name = editStaff.editName;
-            staff.BirthDay = editStaff.editBirthDay;
-            staff.School = editStaff.editSchool;
-            staff.Address = editStaff.editAddress;
-            staff.WorkExperience = editStaff.editWorkExperience;
-            staff.SelfAssessment = editStaff.editSelfAssessment;
-            staff.Lock = editStaff.editLock;
+            var staff = _staffRepository.FindInfo(editStaff.EditId);
+            staff.Id = editStaff.EditId;
+            staff.Name = editStaff.EditName;
+            staff.BirthDay = editStaff.EditBirthDay;
+            staff.School = editStaff.EditSchool;
+            staff.Address = editStaff.EditAddress;
+            staff.WorkExperience = editStaff.EditWorkExperience;
+            staff.SelfAssessment = editStaff.EditSelfAssessment;
+            staff.Lock = editStaff.EditLock;
            
             if (headPic != null)
             {
                 
                 var extension = Path.GetExtension(headPic.FileName);
-                var filename = editStaff.editId + extension;
+                var filename = editStaff.EditId + extension;
                 var filepath = Path.Combine(HttpContext.Current.Server.MapPath("~/Images/StaffImage"), filename);
                 headPic.SaveAs(filepath);
                 staff.Picture = filename;

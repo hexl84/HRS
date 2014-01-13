@@ -8,16 +8,16 @@ namespace StaffSystemViewModel
 {
     public class StaffEditModel
     {
-        public int editId { get; set; }
+        public int EditId { get; set; }
 
-        public string editName { get; set; }
-        public DateTime? editBirthDay { get; set; }
-        public string editSchool { get; set; }
-        public string editAddress { get; set; }
-        public string editWorkExperience { get; set; }
-        public string editSelfAssessment { get; set; }
-        public bool editLock { get; set; }
-        public string editPicture { get; set; }
-        public string editAttachment { get; set; }
+        public string EditName { get; set; }
+        public DateTime? EditBirthDay { get; set; }
+        public string EditSchool { get; set; }
+        public string EditAddress { get; set; }
+        public string EditWorkExperience { get; set; }
+        public string EditSelfAssessment { get; set; }
+        public bool EditLock { get; set; }
+        public string EditPicture { get; set; }
+        public string EditAttachment { get; set; }
     }
 }

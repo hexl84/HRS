@@ -140,12 +140,12 @@ namespace StaffSystemDemoTest.StaffUnitTest
             //Arrange
 
             var vmStaff = new StaffEditModel();
-            vmStaff.editId = -1;
-            vmStaff.editName = "yg";
-            vmStaff.editBirthDay = DateTime.Parse("2014-01-02");
-            vmStaff.editSchool = "School";
-            vmStaff.editAddress = "Address";
-            vmStaff.editWorkExperience = "WorkExperience";
+            vmStaff.EditId = -1;
+            vmStaff.EditName = "yg";
+            vmStaff.EditBirthDay = DateTime.Parse("2014-01-02");
+            vmStaff.EditSchool = "School";
+            vmStaff.EditAddress = "Address";
+            vmStaff.EditWorkExperience = "WorkExperience";
 
             var staffServiceMock = new Mock<IStaffService>();
             var staffServiceObject = staffServiceMock.Object;
