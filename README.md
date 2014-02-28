@@ -1,4 +1,4 @@
 HRS
 ===
 
-Employee management System (for training new developer)
+Employee management System (new developer practice project)
