@@ -9,6 +9,6 @@ namespace StaffSystemData.DataContext
         void Add(Staff staff);
         Staff FindInfo(int id);
         void Edit(Staff staff);
-        
+        void DeleteStaff(int id);
     }
 }

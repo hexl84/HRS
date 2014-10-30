@@ -13,5 +13,6 @@ namespace StaffSystemService.Service
         void Edit(StaffEditModel staff, HttpPostedFileBase headPic, HttpPostedFileBase headAtt);
         void Lock(int id);
         List<IndexViewModel.Staff> Search(string name);
+        void DeleteStaff(int id);
     }
 }

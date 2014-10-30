@@ -72,6 +72,12 @@ namespace StaffSystemDemo.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult Delete(int id)
+        {
+            _staffService.DeleteStaff(id);
+            return RedirectToAction("Index");
+        }
+
         public ActionResult Search(string parameter)
         {
             var indexModel = new IndexViewModel

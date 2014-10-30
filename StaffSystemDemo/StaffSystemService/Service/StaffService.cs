@@ -142,6 +142,10 @@ namespace StaffSystemService.Service
             return staffList;
         }
 
-
+        public void DeleteStaff(int id)
+        {
+            if(id > 0)
+                _staffRepository.DeleteStaff(id);
+        }
     }
 }

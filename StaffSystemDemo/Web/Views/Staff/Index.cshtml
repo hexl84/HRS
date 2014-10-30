@@ -90,6 +90,9 @@
                             {
                                 <a class="btn action-button btn-default" href="javascript:void(0)" data-toggle="modal" data-id="@item.Id" id="EditStaff">Edit</a>
                                 <a class="btn action-button btn-default " href="#" data-toggle="modal" data-id="@item.Id" id="lockStaff">Lock</a>
+                                <a class="btn action-button btn-default " href="" data-id="@item.Id" id="deleteStaff">Delete</a>
+                                @*<button data-id="@item.Id" id="deleteStaff">Delete</button>*@
+                                @*@Html.ActionLink("Delete", "Delete", new { id=item.Id });*@
                             }
                         </td>
                         <td data-member="SelfAssessment" class="colhidden">@item.SelfAssessment</td>
@@ -404,6 +407,13 @@
                 var $this = $(this);
                 var staffId = $this.attr("data-id");
                 window.location.href = "Staff/Lock?id=" + staffId;
+            });
+
+            $("body").on("click", "#deleteStaff", function () {
+                var $this = $(this);
+                var staffId = $this.attr("data-id");
+                window.location.href = "Staff/Delete?id=" + staffId;
+                
             });
 
             $("body").on("click", "#viewStaffInfo", function () {

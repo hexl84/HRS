@@ -39,5 +39,12 @@ namespace StaffSystemData.DataContext
             _dbEntitiesdbContext.SaveChanges();
 
         }
+
+        public void DeleteStaff(int id)
+        { 
+            Staff staff_Remove = this.FindInfo(id);
+            _dbEntitiesdbContext.Staff.Remove(staff_Remove);
+            _dbEntitiesdbContext.SaveChanges();
+        }
     }
 }

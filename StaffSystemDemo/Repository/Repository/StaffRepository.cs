@@ -38,6 +38,11 @@ namespace Repository.Repository
             _dbAccess.Edit(staff);
         }
 
+        public void DeleteStaff(int id)
+        {
+            _dbAccess.DeleteStaff(id);
+        }
+
        
     }
 }

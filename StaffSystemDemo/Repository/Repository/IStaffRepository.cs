@@ -9,6 +9,7 @@ namespace Repository.Repository
         void Add(Staff staff);
         Staff FindInfo(int Id);
         void Edit(Staff staff);
+        void DeleteStaff(int id);
        
     }
 }

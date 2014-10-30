@@ -202,7 +202,8 @@ namespace StaffSystemDemoTest.StaffUnitTest
 
             //Assert
             count.Should().Be(1);
-
+            staffServiceMock.Verify(p => p.Lock(id), Times.Once);
+            //Assert.AreEqual("0", "1");
         }
 
         [Test]
@@ -245,7 +246,7 @@ namespace StaffSystemDemoTest.StaffUnitTest
 
             var httpContextMock = new Mock<HttpContextBase>();
             var httpServerMock = new Mock<HttpServerUtilityBase>();
-            httpServerMock.Setup(x => x.MapPath("~/Doc")).Returns(@"D:\work\HRS\StaffSystemDemo\Web\Doc");
+            httpServerMock.Setup(x => x.MapPath("~/Doc")).Returns(@"E:\MyProject\HRS\StaffSystemDemo\Web\Doc");
             httpContextMock.Setup(x => x.Server).Returns(httpServerMock.Object);
 
             var staffServiceMock = new Mock<IStaffService>();
